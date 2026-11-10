@@ -75,3 +75,9 @@ impl HippocampalEngine {
         }
     }
 }
+
+impl Default for HippocampalEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
