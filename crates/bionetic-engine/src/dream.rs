@@ -77,3 +77,9 @@ impl DreamEngine {
         }
     }
 }
+
+impl Default for DreamEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
