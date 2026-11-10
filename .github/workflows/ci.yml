@@ -55,3 +55,17 @@ jobs:
         run: |
           cd crates/bionetic-wasm
           wasm-pack build --target web --out-dir ../../web/pkg
+
+      - name: Verify browser package entrypoint
+        run: |
+          test -s web/pkg/bionetic_wasm.js
+          test -s web/pkg/bionetic_wasm_bg.wasm
+          grep -F "./pkg/bionetic_wasm.js" web/app.js
+
+      - name: Upload compiled web build
+        uses: actions/upload-artifact@v4
+        with:
+          name: nueralbrain-web-build
+          path: web/
+          if-no-files-found: error
+          retention-days: 3
