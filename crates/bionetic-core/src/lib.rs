@@ -14,6 +14,7 @@ pub mod clump;
 pub mod bundle;
 pub mod trans;
 pub mod neurogenesis;
+pub mod multimodal;
 
 // Re-exports
 pub use ids::*;

@@ -34,6 +34,8 @@ pub struct BioneticEngine {
     pub hippocampus: HippocampalEngine,
     pub reward_system: RewardSystem,
     neurogenesis: NeurogenesisController,
+    /// Maps logical modality addresses to physical sensory-corpus dots.
+    multimodal_dot_map: HashMap<DotId, DotId>,
 }
 
 impl BioneticEngine {
@@ -48,6 +50,7 @@ impl BioneticEngine {
             hippocampus: HippocampalEngine::new(),
             reward_system: RewardSystem::new(),
             neurogenesis: NeurogenesisController::empty(),
+            multimodal_dot_map: HashMap::new(),
         };
 
         engine.initialize();
@@ -335,9 +338,13 @@ impl BioneticEngine {
                 }
                 NeuroEvent::Pruning { corpus, pruned_ids, .. } => {
                     if let Some(target) = self.corpora.get_mut(&corpus) {
-                        for dot_id in pruned_ids {
-                            target.dots.remove(&dot_id);
+                        for dot_id in &pruned_ids {
+                            target.dots.remove(dot_id);
                         }
+                    }
+                    for dot_id in &pruned_ids {
+                        self.multimodal_dot_map
+                            .retain(|_, mapped_dot| mapped_dot != dot_id);
                     }
                 }
             }
@@ -532,7 +539,7 @@ impl BioneticEngine {
         )
     }
 
-    /// Inject a pulse directly into a dot (used by input encoder)
+    /// Inject a pulse directly into an existing dot (used by input encoders).
     pub fn inject_pulse(
         &mut self,
         target_dot: DotId,
@@ -549,6 +556,88 @@ impl BioneticEngine {
             target_gate: gate.id,
             delivery_tick: self.tick + delay_ticks,
         });
+    }
+
+    /// Route a multi-modal pulse's logical sensory address to a physical dot.
+    ///
+    /// A dedicated physical dot is allocated for each logical address until
+    /// the configured sensory-corpus dot cap is reached. At capacity, stable
+    /// hashing maps additional addresses onto existing sensory dots.
+    /// Returns the physical target dot, or None if the sensory corpus is absent.
+    pub fn inject_multimodal_pulse(&mut self, pulse: Pulse) -> Option<DotId> {
+        let sensory_corpus = CorpusId(0);
+        if !self.corpora.contains_key(&sensory_corpus) {
+            return None;
+        }
+
+        let logical_address = pulse.origin;
+        let mapped_dot = self
+            .multimodal_dot_map
+            .get(&logical_address)
+            .copied()
+            .filter(|mapped| {
+                self.corpora
+                    .get(&sensory_corpus)
+                    .map(|corpus| corpus.dots.contains_key(mapped))
+                    .unwrap_or(false)
+            });
+
+        let target_dot = if let Some(mapped) = mapped_dot {
+            mapped
+        } else {
+            self.multimodal_dot_map.remove(&logical_address);
+            let current_count = self.corpora[&sensory_corpus].dot_count();
+            let maximum = self.neurogenesis.config().max_dots_per_corpus;
+
+            let mapped = if maximum == 0 || current_count < maximum {
+                self.spawn_dot(sensory_corpus)
+            } else {
+                let mut available: Vec<DotId> = self.corpora[&sensory_corpus]
+                    .dots
+                    .keys()
+                    .copied()
+                    .collect();
+                available.sort_unstable();
+                if available.is_empty() {
+                    return None;
+                }
+
+                let mut hash = logical_address.0;
+                hash = (hash ^ (hash >> 30)).wrapping_mul(0xbf58_476d_1ce4_e5b9);
+                hash = (hash ^ (hash >> 27)).wrapping_mul(0x94d0_49bb_1331_11eb);
+                hash ^= hash >> 31;
+                available[(hash % available.len() as u64) as usize]
+            };
+
+            self.multimodal_dot_map.insert(logical_address, mapped);
+            mapped
+        };
+
+        let gate = Gate::soft();
+        let delivery_tick = pulse.created_tick.max(self.tick.saturating_add(1));
+        self.pulse_queue.push_back(PulseDelivery {
+            pulse,
+            target_dot,
+            target_corpus: sensory_corpus,
+            target_gate: gate.id,
+            delivery_tick,
+        });
+
+        Some(target_dot)
+    }
+
+    /// Route every pulse in a multi-modal bundle. Returns the number queued.
+    pub fn inject_multimodal_input(
+        &mut self,
+        input: bionetic_core::multimodal::MultiModalInput,
+    ) -> usize {
+        let mut routed = 0;
+        for pulse in input.into_flat() {
+            if self.inject_multimodal_pulse(pulse).is_some() {
+                routed += 1;
+            }
+        }
+        routed
     }
 }
 

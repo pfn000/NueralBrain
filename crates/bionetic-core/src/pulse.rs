@@ -1,7 +1,7 @@
 //! Pulse: electrical signal that propagates between dots.
 
-use serde::{Serialize, Deserialize};
-use crate::{PulseId, DotId, ChemicalDelta};
+use crate::{ChemicalDelta, DotId, PulseId, Rate};
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Pulse {
@@ -16,19 +16,23 @@ pub struct Pulse {
     pub ttl: u32,
     pub created_tick: u64,
     pub seed: u64,
+    /// Spatial, temporal, and channel metadata carried with this pulse.
+    /// Defaults when reading snapshots written before this field existed.
+    #[serde(default)]
+    pub rate: Rate,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub enum PulseType {
-    /// V.Pulse — carries computed value forward
+    /// V.Pulse — carries computed value forward.
     Value,
-    /// R.Pulse — reward/reinforcement (backward)
+    /// R.Pulse — reward/reinforcement (backward).
     Reward,
-    /// I.Pulse — inhibitory, suppresses target
+    /// I.Pulse — inhibitory, suppresses target.
     Inhibitory,
-    /// M.Pulse — modulatory, changes parameters
+    /// M.Pulse — modulatory, changes parameters.
     Modulatory,
-    /// Trans — bidirectional communication
+    /// Trans — bidirectional communication.
     Trans,
 }
 
@@ -46,6 +50,7 @@ impl Pulse {
             ttl: 64,
             created_tick: tick,
             seed: 0,
+            rate: Rate::default(),
         }
     }
 
@@ -62,6 +67,7 @@ impl Pulse {
             ttl: 128,
             created_tick: tick,
             seed: 0,
+            rate: Rate::default(),
         }
     }
 
@@ -81,21 +87,22 @@ impl Pulse {
             ttl: 32,
             created_tick: tick,
             seed: 0,
+            rate: Rate::default(),
         }
     }
 
-    /// Record that this pulse passed through a dot
+    /// Record that this pulse passed through a dot.
     pub fn trace(&mut self, dot_id: DotId) {
         self.path_trace.push(dot_id);
         self.ttl = self.ttl.saturating_sub(1);
     }
 
-    /// Check if this pulse is still alive
+    /// Check if this pulse is still alive.
     pub fn is_alive(&self) -> bool {
         self.ttl > 0
     }
 
-    /// Check if this pulse already visited a dot (loop prevention)
+    /// Check if this pulse already visited a dot (loop prevention).
     pub fn has_visited(&self, dot_id: DotId) -> bool {
         self.path_trace.contains(&dot_id)
     }
