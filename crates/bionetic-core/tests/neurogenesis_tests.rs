@@ -1,6 +1,6 @@
 //! Integration tests for the neurogenesis system.
 
-use bionetic_core::dot::DotId;
+use bionetic_core::ids::DotId;
 use bionetic_core::ids::CorpusId;
 use bionetic_core::neurogenesis::{
     NeuroEvent, NeurogenesisConfig, NeurogenesisController,

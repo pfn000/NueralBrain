@@ -9,7 +9,7 @@
 //! them to physical dots in CorpusId(0), allocating one per address until the
 //! configured sensory-corpus capacity is reached.
 
-use crate::dot::DotId;
+use crate::ids::DotId;
 use crate::pulse::{Pulse, PulseType};
 use crate::rate::Rate;
 use serde::{Deserialize, Serialize};
