@@ -24,7 +24,7 @@ impl DreamEngine {
         }
     }
 
-    pub fn dream_tick(&mut self, corpora: &mut HashMap<CorpusId, Corpus>, tick: u64) {
+    pub fn dream_tick(&mut self, corpora: &mut HashMap<CorpusId, Corpus>, _tick: u64) {
         self.cycle += 1;
 
         match self.phase {
