@@ -473,18 +473,18 @@ mod tests {
             Modality::Proprioceptive,
         ];
 
-        for first in 0..modalities.len() {
-            for second in (first + 1)..modalities.len() {
-                let a_start = modalities[first].sensory_offset();
-                let a_end = a_start + modalities[first].capacity();
-                let b_start = modalities[second].sensory_offset();
-                let b_end = b_start + modalities[second].capacity();
+        for (first_index, first_modality) in modalities.iter().enumerate() {
+            for second_modality in modalities.iter().skip(first_index + 1) {
+                let a_start = first_modality.sensory_offset();
+                let a_end = a_start + first_modality.capacity();
+                let b_start = second_modality.sensory_offset();
+                let b_end = b_start + second_modality.capacity();
 
                 assert!(
                     a_end <= b_start || b_end <= a_start,
                     "Overlap between {} and {}",
-                    modalities[first].name(),
-                    modalities[second].name()
+                    first_modality.name(),
+                    second_modality.name()
                 );
             }
         }

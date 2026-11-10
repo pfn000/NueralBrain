@@ -15,6 +15,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Prepare not-yet-added Phase 2 crates
+        shell: bash
+        run: |
+          # The workspace manifest references crates that arrive in later sections.
+          # Create empty CI-only packages so the already-added crates can be built now.
+          for crate in bionetic-sdk bionetic-vision bionetic-search bionetic-swarm bionetic-distributed; do
+            crate_dir="crates/$crate"
+            if [[ ! -f "$crate_dir/Cargo.toml" ]]; then
+              mkdir -p "$crate_dir/src"
+              cat > "$crate_dir/Cargo.toml" <<EOF
+          [package]
+          name = "$crate"
+          version.workspace = true
+          edition.workspace = true
+          license.workspace = true
+          authors.workspace = true
+          repository.workspace = true
+          publish = false
+          EOF
+              printf '%s\n' '// CI-only placeholder; the real crate is added by its scheduled section.' > "$crate_dir/src/lib.rs"
+            fi
+          done
+
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
