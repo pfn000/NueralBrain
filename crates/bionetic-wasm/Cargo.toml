@@ -34,3 +34,9 @@ web-sys = { workspace = true, features = [
 serde = { workspace = true }
 serde_json = { workspace = true }
 serde-wasm-bindgen = "0.6"
+
+# The workspace release-wasm profile already performs size optimization.
+# Disable Binaryen's wasm-opt pass because its bundled validator rejects the
+# bulk-memory instructions emitted by the current Rust/WebAssembly toolchain.
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
