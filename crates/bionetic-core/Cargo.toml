@@ -2,7 +2,23 @@
 name = "bionetic-core"
 version.workspace = true
 edition.workspace = true
-description = "Core primitives for the Bionetic Processing Architecture"
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Core primitives for NeuralBrain — dots, pulses, gates, rates, endings."
+
+[features]
+default = []
+multimodal = ["dep:image"]
+# serde is always enabled by this crate; this feature gates UUID serde support.
+serde-full = ["uuid/serde"]
 
 [dependencies]
 serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+thiserror = { workspace = true }
+image = { workspace = true, optional = true }
+
+[dev-dependencies]
+serde_json = { workspace = true }

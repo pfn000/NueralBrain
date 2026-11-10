@@ -2,7 +2,10 @@
 name = "bionetic-wasm"
 version.workspace = true
 edition.workspace = true
-description = "WebAssembly bindings for the Bionetic brain"
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "WebAssembly bindings for NeuralBrain — browser & HuggingFace deployment."
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -11,10 +14,23 @@ crate-type = ["cdylib", "rlib"]
 bionetic-core = { path = "../bionetic-core" }
 bionetic-engine = { path = "../bionetic-engine" }
 bionetic-io = { path = "../bionetic-io" }
-wasm-bindgen = "0.2"
+bionetic-sdk = { path = "../bionetic-sdk" }
+bionetic-vision = { path = "../bionetic-vision" }
+bionetic-search = { path = "../bionetic-search" }
+bionetic-swarm = { path = "../bionetic-swarm" }
+
+wasm-bindgen = { workspace = true }
+js-sys = { workspace = true }
+web-sys = { workspace = true, features = [
+    "console",
+    "Window",
+    "Worker",
+    "MessageEvent",
+    "ImageData",
+    "HtmlCanvasElement",
+    "CanvasRenderingContext2d",
+    "Storage",
+] }
 serde = { workspace = true }
 serde_json = { workspace = true }
-
-[profile.release]
-opt-level = "z"
-lto = true
+serde-wasm-bindgen = "0.6"
