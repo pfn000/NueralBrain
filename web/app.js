@@ -2,7 +2,7 @@ import init, {
             init_brain, process_input, tick_brain, 
             trigger_reward, trigger_discipline,
             enter_sleep, wake_up, get_brain_state 
-        } from './pkg/bionetic_brain.js';
+        } from './pkg/bionetic_wasm.js';
         
         let animFrame;
         
@@ -12,7 +12,7 @@ import init, {
             
             // Register service worker for background dreaming
             if ('serviceWorker' in navigator) {
-                const reg = await navigator.serviceWorker.register('/sw.js');
+                const reg = await navigator.serviceWorker.register('./sw.js');
                 console.log('Dream engine registered');
             }
             
@@ -25,9 +25,9 @@ import init, {
             function loop() {
                 const status = JSON.parse(tick_brain());
                 
-                document.getElementById('s-dots').textContent = status.dots || 0;
-                document.getElementById('s-pulses').textContent = status.pulses || 0;
-                document.getElementById('s-clumps').textContent = status.clumps || 0;
+                document.getElementById('s-dots').textContent = status.total_dots || 0;
+                document.getElementById('s-pulses').textContent = status.pending_pulses || 0;
+                document.getElementById('s-clumps').textContent = status.total_clumps || 0;
                 document.getElementById('s-state').textContent = status.state || '?';
                 document.getElementById('s-tick').textContent = status.tick || 0;
                 

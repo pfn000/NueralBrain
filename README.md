@@ -45,7 +45,7 @@
   - [Native (Rust)](#native-rust)
   - [Web (WASM)](#web-wasm)
   - [Headless Server](#headless-server)
-- [Screenshots](#-screenshots)
+- [Reference Visuals](#-reference-visuals)
 - [Comparison with Traditional AI](#-comparison-with-traditional-ai)
 - [Roadmap](#-roadmap)
 - [Research References](#-research-references)
@@ -279,7 +279,7 @@ The dream engine runs six phases in cycle:
 | **Synthesize** | Random cross-activation for novel connections (creativity) |
 | **Self-Judge** | Evaluate behaviors against reward history |
 
-**Critical feature:** The Service Worker keeps the dream engine running even when the browser tab is closed. The brain keeps improving itself in the background.
+**Implementation status:** The Service Worker and IndexedDB code are currently scaffolding. Its `processDreamTick()` function is a placeholder that only logs a message; continuous background dreaming and full engine-state persistence are not implemented.
 
 ---
 
@@ -412,27 +412,27 @@ cargo run --example headless_server
 
 ## 🖼 Reference Visuals
 
-> The SVGs below are the visual reference assets supplied with the repository specification. They are not captured screenshots of a verified running build.
+> These are the SVG reference illustrations supplied in the repository source document. They are not screenshots captured from the running application.
 
 ### Web Interface
 
 <div align="center">
 <img src="assets/screenshot-ui.svg" alt="NeuralBrain Web Interface" width="800"/>
-<p><em>The web interface showing real-time brain state, input/output panel, and controls</em></p>
+<p><em>Source-provided UI illustration; not a runtime capture</em></p>
 </div>
 
 ### Neural Visualization
 
 <div align="center">
 <img src="assets/screenshot-viz.svg" alt="Neural Visualization" width="800"/>
-<p><em>Real-time visualization of dots firing, pulses propagating, and clumps forming</em></p>
+<p><em>Conceptual neural-network visualization supplied as an SVG asset</em></p>
 </div>
 
 ### Terminal Output
 
 <div align="center">
 <img src="assets/screenshot-terminal.svg" alt="Terminal Output" width="800"/>
-<p><em>Running the brain natively with terminal visualization</em></p>
+<p><em>Source-provided terminal illustration; not a captured terminal session</em></p>
 </div>
 
 ---
@@ -472,8 +472,10 @@ cargo run --example headless_server
 - [x] Memory consolidation (STM → LTM)
 - [x] Input encoding / Output decoding
 - [x] WASM compilation for web
-- [x] Service Worker for background dreaming
-- [x] IndexedDB persistence
+- [x] Basic Service Worker and IndexedDB status-snapshot scaffolding
+- [ ] Reliable background dream execution
+- [ ] Full engine-state persistence
+- [ ] Live neural-canvas visualization
 - [ ] Advanced neurogenesis (adaptive dot creation)
 - [ ] Multi-modal input (image → pulse patterns)
 - [ ] Distributed brain across multiple workers
