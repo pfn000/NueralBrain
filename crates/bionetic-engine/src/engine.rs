@@ -164,7 +164,7 @@ impl BioneticEngine {
     }
 
     // Keep modulo checks compatible with the documented Rust 1.75+ floor.
-    #[allow(clippy::manual_is_multiple_of)]
+    #[allow(unknown_lints, clippy::manual_is_multiple_of)]
     fn tick_awake(&mut self) {
         self.deliver_pulses();
 

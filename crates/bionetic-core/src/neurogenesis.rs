@@ -225,7 +225,7 @@ impl NeurogenesisController {
     }
 
     /// Advance the clock by one tick and return events for the engine to apply.
-    #[allow(clippy::manual_is_multiple_of)]
+    #[allow(unknown_lints, clippy::manual_is_multiple_of)]
     pub fn tick(&mut self, current_tick: u64) -> Vec<NeuroEvent> {
         self.tick_counter = current_tick;
 

@@ -116,9 +116,11 @@ pub fn image_grayscale_to_pulses(
         }
 
         let amplitude = brightness as f32 / 255.0;
-        let mut rate = Rate::default();
-        rate.spatial_x = (index % width) as f32 / width as f32;
-        rate.spatial_y = (index / width) as f32 / height as f32;
+        let rate = Rate {
+            spatial_x: (index % width) as f32 / width as f32,
+            spatial_y: (index / width) as f32 / height as f32,
+            ..Rate::default()
+        };
 
         pulses.push(make_pulse(
             base + (index as u64 % cap),
@@ -160,10 +162,12 @@ pub fn image_rgb_to_pulses(
             }
 
             let amplitude = value as f32 / 255.0;
-            let mut rate = Rate::default();
-            rate.spatial_x = (index % width) as f32 / width as f32;
-            rate.spatial_y = (index / width) as f32 / height as f32;
-            rate.channel = channel as u8;
+            let rate = Rate {
+                spatial_x: (index % width) as f32 / width as f32,
+                spatial_y: (index / width) as f32 / height as f32,
+                channel: channel as u8,
+                ..Rate::default()
+            };
 
             pulses.push(make_pulse(
                 base + channel as u64 * channel_size + offset,
@@ -246,8 +250,10 @@ pub fn audio_waveform_to_pulses(
         let zcr = crossing_count as f32 / window.len().saturating_sub(1).max(1) as f32;
 
         let offset = ((window_index as u64).wrapping_add((zcr * 64.0) as u64)) % cap;
-        let mut rate = Rate::default();
-        rate.temporal_phase = zcr.clamp(0.0, 1.0);
+        let rate = Rate {
+            temporal_phase: zcr.clamp(0.0, 1.0),
+            ..Rate::default()
+        };
 
         pulses.push(make_pulse(
             base + offset,
@@ -276,9 +282,11 @@ pub fn text_to_pulses(text: &str, tick: u64) -> Vec<Pulse> {
             let phase = ((scalar >> 8) % 16) as f32 / 15.0;
             let pulse_amplitude = amplitude.max(0.1) * (0.5 + phase * 0.5);
 
-            let mut rate = Rate::default();
-            rate.temporal_phase = phase;
-            rate.sequence_position = index as u32;
+            let rate = Rate {
+                temporal_phase: phase,
+                sequence_position: index as u32,
+                ..Rate::default()
+            };
 
             make_pulse(
                 base + offset,
@@ -309,8 +317,10 @@ pub fn text_trigrams_to_pulses(text: &str, tick: u64) -> Vec<Pulse> {
             .wrapping_add(third);
         let amplitude = 0.7 - (index as f32 * 0.005).min(0.5);
 
-        let mut rate = Rate::default();
-        rate.sequence_position = index as u32;
+        let rate = Rate {
+            sequence_position: index as u32,
+            ..Rate::default()
+        };
 
         pulses.push(make_pulse(
             base + (hash % cap),
@@ -348,9 +358,11 @@ pub fn touch_pressure_to_pulses(
                 return None;
             }
 
-            let mut rate = Rate::default();
-            rate.spatial_x = (index % width) as f32 / width as f32;
-            rate.spatial_y = (index / width) as f32 / row_count.max(1) as f32;
+            let rate = Rate {
+                spatial_x: (index % width) as f32 / width as f32,
+                spatial_y: (index / width) as f32 / row_count.max(1) as f32,
+                ..Rate::default()
+            };
 
             Some(make_pulse(
                 base + (index as u64 % cap),
