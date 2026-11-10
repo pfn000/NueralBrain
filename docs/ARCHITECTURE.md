@@ -798,6 +798,7 @@ impl TransBinaryChannel {
 
 static CHANNEL_COUNTER: std::sync::atomic::AtomicU64 = 
     std::sync::atomic::AtomicU64::new(0);
+
 fn generate_channel_id() -> u64 {
     CHANNEL_COUNTER.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
 }
@@ -1596,7 +1597,8 @@ impl BioneticEngine {
         
         if total_dots > 0.0 {
             let avg_fatigue = total_fatigue / total_dots;
-            if avg_fatigue > 0.7 {                self.state = SystemState::Drowsy;
+            if avg_fatigue > 0.7 {
+                self.state = SystemState::Drowsy;
             }
             if avg_fatigue > 0.9 {
                 self.state = SystemState::Dreaming;
@@ -2395,7 +2397,8 @@ impl OutputDecoder {
                 }
             }
         }
-                output
+        
+        output
     }
 }
 ```
@@ -3194,6 +3197,7 @@ Starting system (512 dots):
 Growing to 10,000 dots: ~5 MB
 Growing to 100,000 dots: ~50 MB
 Growing to 1,000,000 dots: ~500 MB
+
 For comparison:
   GPT-2 Small: 500 MB (frozen, no learning)
   This system at 500 MB: 1M living, learning dots
@@ -3244,4 +3248,5 @@ The trans-binary communication ensures that processing isn't bottlenecked throug
 
 ---
 
+This is your foundation. Every piece connects. The Rust compiles to WASM, runs in a browser, persists in IndexedDB, dreams through Service Workers, and grows through use. No tokens. No tensors. No GPU. Just dots, pulses, gates, and rates — communicating, learning, sleeping, and evolving.
 This is your foundation. Every piece connects. The Rust compiles to WASM, runs in a browser, persists in IndexedDB, dreams through Service Workers, and grows through use. No tokens. No tensors. No GPU. Just dots, pulses, gates, and rates — communicating, learning, sleeping, and evolving.
