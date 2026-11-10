@@ -72,3 +72,9 @@ impl RewardSystem {
         }
     }
 }
+
+impl Default for RewardSystem {
+    fn default() -> Self {
+        Self::new()
+    }
+}
