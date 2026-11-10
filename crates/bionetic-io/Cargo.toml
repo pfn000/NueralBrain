@@ -8,3 +8,4 @@ description = "Input encoding and output decoding for the Bionetic brain"
 bionetic-core = { path = "../bionetic-core" }
 bionetic-engine = { path = "../bionetic-engine" }
 serde = { workspace = true }
+serde_json = { workspace = true }
