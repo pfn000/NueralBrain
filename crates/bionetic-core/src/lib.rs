@@ -13,6 +13,7 @@ pub mod corpus;
 pub mod clump;
 pub mod bundle;
 pub mod trans;
+pub mod neurogenesis;
 
 // Re-exports
 pub use ids::*;

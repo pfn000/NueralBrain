@@ -3,6 +3,7 @@ use bionetic_core::*;
 use crate::hippocampus::HippocampalEngine;
 use crate::reward::RewardSystem;
 use crate::dream::DreamEngine;
+use bionetic_core::neurogenesis::{NeuroEvent, NeurogenesisController};
 
 /// A pulse scheduled for delivery
 #[derive(Debug, Clone)]
@@ -32,6 +33,7 @@ pub struct BioneticEngine {
     pub dream_engine: DreamEngine,
     pub hippocampus: HippocampalEngine,
     pub reward_system: RewardSystem,
+    neurogenesis: NeurogenesisController,
 }
 
 impl BioneticEngine {
@@ -45,6 +47,7 @@ impl BioneticEngine {
             dream_engine: DreamEngine::new(),
             hippocampus: HippocampalEngine::new(),
             reward_system: RewardSystem::new(),
+            neurogenesis: NeurogenesisController::empty(),
         };
 
         engine.initialize();
@@ -128,8 +131,16 @@ impl BioneticEngine {
         let id = DotId::next();
         let dot = Dot::new(id, corpus_id, self.tick);
 
-        if let Some(corpus) = self.corpora.get_mut(&corpus_id) {
+        let inserted = if let Some(corpus) = self.corpora.get_mut(&corpus_id) {
             corpus.dots.insert(id, dot);
+            true
+        } else {
+            false
+        };
+
+        if inserted {
+            self.neurogenesis
+                .register_dot_in_corpus(id, corpus_id, self.tick);
         }
 
         id
@@ -145,6 +156,8 @@ impl BioneticEngine {
             SystemState::DeepSleep => self.tick_deep_sleep(),
             SystemState::Booting => {}
         }
+
+        self.tick_neurogenesis();
     }
 
     // Keep modulo checks compatible with the documented Rust 1.75+ floor.
@@ -214,14 +227,15 @@ impl BioneticEngine {
 
     fn deliver_pulses(&mut self) {
         let mut remaining = VecDeque::new();
+        let mut delivered_corpora = Vec::new();
 
         while let Some(delivery) = self.pulse_queue.pop_front() {
             if delivery.delivery_tick <= self.tick {
                 if let Some(corpus) = self.corpora.get_mut(&delivery.target_corpus) {
                     if let Some(dot) = corpus.dots.get_mut(&delivery.target_dot) {
-                        // Apply pulse to dot
                         dot.potential += delivery.pulse.value;
                         dot.chemicals.apply_delta(&delivery.pulse.chemical_payload);
+                        delivered_corpora.push(delivery.target_corpus);
                     }
                 }
             } else {
@@ -230,10 +244,15 @@ impl BioneticEngine {
         }
 
         self.pulse_queue = remaining;
+
+        for corpus_id in delivered_corpora {
+            self.neurogenesis.record_pulse(corpus_id);
+        }
     }
 
     fn process_corpus(&mut self, corpus_id: CorpusId) {
         let mut new_deliveries: Vec<PulseDelivery> = Vec::new();
+        let mut fired_dots = Vec::new();
 
         if let Some(corpus) = self.corpora.get_mut(&corpus_id) {
             corpus.cycle_count += 1;
@@ -249,6 +268,7 @@ impl BioneticEngine {
                     if dot.should_fire() {
                         let pulse_value = dot.potential - dot.resting_potential;
                         dot.fire(tick);
+                        fired_dots.push(dot_id);
 
                         // Generate pulses for each branch
                         for branch in &mut dot.branches {
@@ -278,6 +298,49 @@ impl BioneticEngine {
 
         for delivery in new_deliveries {
             self.pulse_queue.push_back(delivery);
+        }
+
+        for dot_id in fired_dots {
+            self.neurogenesis.record_dot_fire(dot_id);
+        }
+    }
+
+    fn tick_neurogenesis(&mut self) {
+        let corpus_counts: Vec<(CorpusId, usize)> = self
+            .corpora
+            .iter()
+            .map(|(corpus_id, corpus)| (*corpus_id, corpus.dot_count()))
+            .collect();
+
+        for (corpus_id, count) in corpus_counts {
+            self.neurogenesis.set_dot_count(corpus_id, count);
+        }
+
+        let events = self.neurogenesis.tick(self.tick);
+        for event in events {
+            match event {
+                NeuroEvent::Growth { corpus, count, tick } => {
+                    let newborns =
+                        self.neurogenesis.create_newborn_dots(corpus, count, tick);
+
+                    if let Some(target) = self.corpora.get_mut(&corpus) {
+                        for dot in newborns {
+                            target.dots.insert(dot.id, dot);
+                        }
+                    } else {
+                        for dot in newborns {
+                            self.neurogenesis.unregister_dot(&dot.id);
+                        }
+                    }
+                }
+                NeuroEvent::Pruning { corpus, pruned_ids, .. } => {
+                    if let Some(target) = self.corpora.get_mut(&corpus) {
+                        for dot_id in pruned_ids {
+                            target.dots.remove(&dot_id);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -430,6 +493,15 @@ impl BioneticEngine {
 
     pub fn pending_pulses(&self) -> usize {
         self.pulse_queue.len()
+    }
+
+    /// Access the neurogenesis controller for runtime inspection and tuning.
+    pub fn neurogenesis(&self) -> &NeurogenesisController {
+        &self.neurogenesis
+    }
+
+    pub fn neurogenesis_mut(&mut self) -> &mut NeurogenesisController {
+        &mut self.neurogenesis
     }
 
     pub fn enter_sleep(&mut self) {
