@@ -14,8 +14,8 @@ crate-type = ["cdylib", "rlib"]
 bionetic-core = { path = "../bionetic-core" }
 bionetic-engine = { path = "../bionetic-engine" }
 bionetic-io = { path = "../bionetic-io" }
-bionetic-sdk = { path = "../bionetic-sdk" }
-bionetic-vision = { path = "../bionetic-vision" }
+bionetic-sdk = { path = "../bionetic-sdk", default-features = false, features = ["wasm"] }
+bionetic-vision = { path = "../bionetic-vision", default-features = false }
 bionetic-search = { path = "../bionetic-search" }
 bionetic-swarm = { path = "../bionetic-swarm" }
 

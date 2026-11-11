@@ -61,6 +61,15 @@ jobs:
       - name: Clippy
         run: cargo clippy --all -- -D warnings
 
+      - name: Check vision file source on Rust 1.75
+        run: cargo check -p bionetic-vision --features file-source
+
+      - name: Install Linux camera build dependencies
+        run: sudo apt-get update && sudo apt-get install -y pkg-config libudev-dev libv4l-dev
+
+      - name: Check full vision stack on stable
+        run: cargo +stable check -p bionetic-vision --features full --all-targets
+
   wasm:
     runs-on: ubuntu-latest
     steps:
