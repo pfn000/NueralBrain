@@ -3,6 +3,8 @@ use std::path::Path;
 
 use crate::intent::{Intent, IntentKind};
 
+type PolicyPredicate = dyn Fn(&Intent, &Capability) -> Decision + Send + Sync;
+
 /// Named abilities required by effectors.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
@@ -45,7 +47,7 @@ pub enum Decision {
 /// Explicit policy. Default is deny-all; an optional predicate can veto grants.
 pub struct PermissionPolicy {
     granted: HashSet<String>,
-    predicate: Option<Box<dyn Fn(&Intent, &Capability) -> Decision + Send + Sync>>,
+    predicate: Option<Box<PolicyPredicate>>,
     read_only: bool,
 }
 

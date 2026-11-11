@@ -128,7 +128,7 @@ impl SearchEngine {
         });
         ranked.truncate(limit.max(1));
 
-        let mut hits: Vec<Hit> = ranked.into_iter().filter_map(|(id, score)| {
+        let hits: Vec<Hit> = ranked.into_iter().filter_map(|(id, score)| {
             let document = self.corpus.document(id)?;
             Some(hit_from_document(
                 document,
@@ -138,6 +138,8 @@ impl SearchEngine {
                 false,
             ))
         }).collect();
+        #[cfg(feature = "web")]
+        let mut hits = hits;
 
         let include_web = query.web
             || {
