@@ -1,4 +1,5 @@
 use bionetic_core::ids::{CorpusId, DotId};
+use bionetic_core::MOTOR;
 use bionetic_engine::engine::BioneticEngine;
 
 use crate::{INTENT_FIRE_THRESHOLD, INTENT_WINDOW_TICKS};
@@ -55,7 +56,7 @@ pub struct IntentDecoder {
 
 impl Default for IntentDecoder {
     fn default() -> Self {
-        Self::new(CorpusId(5), INTENT_FIRE_THRESHOLD)
+        Self::new(MOTOR, INTENT_FIRE_THRESHOLD)
     }
 }
 

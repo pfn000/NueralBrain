@@ -1,4 +1,5 @@
 use bionetic_core::ids::{CorpusId, DotId};
+use bionetic_core::SENSORY_IN;
 use bionetic_engine::engine::BioneticEngine;
 
 use crate::concept::ConceptId;
@@ -17,7 +18,7 @@ pub struct SearchEncoderConfig {
 impl Default for SearchEncoderConfig {
     fn default() -> Self {
         Self {
-            target_corpus: CorpusId(0),
+            target_corpus: SENSORY_IN,
             amplitude: 0.6,
             top_k: DEFAULT_TOP_K,
             stimulate_concept_dots: true,

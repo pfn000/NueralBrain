@@ -27,8 +27,8 @@ pub struct BrainConfig {
 impl Default for BrainConfig {
     fn default() -> Self {
         Self {
-            num_corpora: 8,
-            dots_per_corpus: 64,
+            num_corpora: bionetic_core::CORPUS_COUNT_TOTAL,
+            dots_per_corpus: 128,
             enable_dreaming: true,
             enable_neurogenesis: true,
             tick_rate_hz: 100,
@@ -81,7 +81,7 @@ impl BrainConfig {
 /// use bionetic_sdk::BrainBuilder;
 ///
 /// let brain = BrainBuilder::new()
-///     .with_corpora(8)
+///     .with_corpora(bionetic_core::CORPUS_COUNT_TOTAL)
 ///     .with_dots_per_corpus(128)
 ///     .with_dreaming(true)
 ///     .build();
@@ -106,13 +106,13 @@ impl BrainBuilder {
 
     // ── Fluent setters ──
 
-    /// Set the number of corpora (default: 8).
+    /// Set the number of corpora (default: 14).
     pub fn with_corpora(mut self, n: usize) -> Self {
         self.config.num_corpora = n;
         self
     }
 
-    /// Set the initial dots per corpus (default: 64).
+    /// Set the initial dots per corpus (default: 128).
     pub fn with_dots_per_corpus(mut self, n: usize) -> Self {
         self.config.dots_per_corpus = n;
         self
@@ -196,8 +196,8 @@ mod tests {
     #[test]
     fn test_default_builder() {
         let b = BrainBuilder::new();
-        assert_eq!(b.config().num_corpora, 8);
-        assert_eq!(b.config().dots_per_corpus, 64);
+        assert_eq!(b.config().num_corpora, bionetic_core::CORPUS_COUNT_TOTAL);
+        assert_eq!(b.config().dots_per_corpus, 128);
         assert!(b.config().enable_dreaming);
     }
 

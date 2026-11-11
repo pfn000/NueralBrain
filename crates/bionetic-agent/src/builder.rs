@@ -1,4 +1,5 @@
 use bionetic_core::ids::CorpusId;
+use bionetic_core::MOTOR;
 
 use crate::audit::AuditLog;
 use crate::effector::Effector;
@@ -22,7 +23,7 @@ pub struct AgentBuilder {
 impl Default for AgentBuilder {
     fn default() -> Self {
         Self {
-            motor_corpus: CorpusId(5),
+            motor_corpus: MOTOR,
             threshold: INTENT_FIRE_THRESHOLD,
             policy: PermissionPolicy::deny_all(),
             registry: EffectorRegistry::new(),

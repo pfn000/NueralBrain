@@ -1,6 +1,6 @@
 use std::time::Instant;
 
-use bionetic_core::ids::CorpusId;
+use bionetic_core::SENSORY_IN;
 use bionetic_engine::engine::BioneticEngine;
 
 use crate::audit::{AuditLog, AuditOutcome};
@@ -154,7 +154,7 @@ impl AgentLoop {
 }
 
 fn feed_bytes_to_sensory(engine: &mut BioneticEngine, bytes: &[u8]) {
-    let sensory = CorpusId(0);
+    let sensory = SENSORY_IN;
     let Some(corpus) = engine.corpora.get(&sensory) else { return; };
     let mut ids: Vec<_> = corpus.dots.keys().copied().collect();
     ids.sort_unstable();
