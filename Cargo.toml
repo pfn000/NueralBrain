@@ -10,6 +10,7 @@ members = [
     # ── Phase 2 crates ──
     "crates/bionetic-sdk",
     "crates/bionetic-vision",
+    "crates/bionetic-agent",
     "crates/bionetic-search",
     "crates/bionetic-swarm",
     "crates/bionetic-distributed",
@@ -25,7 +26,6 @@ rust-version = "1.75"
 description = "Bionetic Processing Architecture — Intelligence from neural communication, not tokens."
 
 [workspace.dependencies]
-# Shared across all crates — use workspace = true in member Cargo.toml files.
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 uuid = { version = "=1.11.0", features = ["v4", "js"] }

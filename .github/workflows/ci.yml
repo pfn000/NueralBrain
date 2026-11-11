@@ -18,9 +18,7 @@ jobs:
       - name: Prepare not-yet-added Phase 2 crates
         shell: bash
         run: |
-          # The workspace manifest references crates that arrive in later sections.
-          # Create empty CI-only packages so the already-added crates can be built now.
-          for crate in bionetic-sdk bionetic-vision bionetic-search bionetic-swarm bionetic-distributed; do
+          for crate in bionetic-sdk bionetic-vision bionetic-swarm bionetic-distributed; do
             crate_dir="crates/$crate"
             if [[ ! -f "$crate_dir/Cargo.toml" ]]; then
               mkdir -p "$crate_dir/src"
@@ -61,6 +59,18 @@ jobs:
       - name: Clippy
         run: cargo clippy --all -- -D warnings
 
+      - name: Test Agent Core and concrete local effectors
+        run: cargo test -p bionetic-agent --features "effector-shell effector-fs effector-code" -- --nocapture
+
+      - name: Check all browser and HTTP effector feature paths
+        run: cargo check -p bionetic-agent --features all-effectors --all-targets
+
+      - name: Test concept search and agent integration
+        run: cargo test -p bionetic-search --features "corpus-json agent" -- --nocapture
+
+      - name: Check full search feature set
+        run: cargo check -p bionetic-search --features full --all-targets
+
       - name: Check vision file source on Rust 1.75
         run: cargo check -p bionetic-vision --features file-source
 
@@ -78,9 +88,7 @@ jobs:
       - name: Prepare not-yet-added Phase 2 crates
         shell: bash
         run: |
-          # The workspace manifest references crates that arrive in later sections.
-          # Create empty CI-only packages so the already-added crates can be built now.
-          for crate in bionetic-sdk bionetic-vision bionetic-search bionetic-swarm bionetic-distributed; do
+          for crate in bionetic-sdk bionetic-vision bionetic-swarm bionetic-distributed; do
             crate_dir="crates/$crate"
             if [[ ! -f "$crate_dir/Cargo.toml" ]]; then
               mkdir -p "$crate_dir/src"
