@@ -124,30 +124,34 @@ impl Pulse {
     }
 
 
-    pub fn new_internal(origin: DotId, value: f64, intensity: f64, tick: u64) -> Self {
-        Self::value_pulse(origin, value, intensity, tick)
+    /// Construct an internal pulse of the requested type.
+    pub fn new_internal(origin: DotId, value: f64, pulse_type: PulseType, tick: u64) -> Self {
+        let mut pulse = Self::value_pulse(origin, value, value.abs(), tick);
+        pulse.pulse_type = pulse_type;
+        pulse.source = PulseSource::Internal;
+        pulse
     }
 
-    pub fn new_external(origin: DotId, value: f64, intensity: f64, tick: u64) -> Self {
-        let mut pulse = Self::value_pulse(origin, value, intensity, tick);
+    /// Construct a pulse received from an external source.
+    pub fn new_external(origin: DotId, value: f64, pulse_type: PulseType, tick: u64) -> Self {
+        let mut pulse = Self::value_pulse(origin, value, value.abs(), tick);
+        pulse.pulse_type = pulse_type;
         pulse.source = PulseSource::External;
         pulse
     }
 
-    pub fn new_trans_in(
-        origin: DotId, value: f64, intensity: f64, tick: u64, source: PulseSource,
-    ) -> Self {
-        let mut pulse = Self::value_pulse(origin, value, intensity, tick);
+    /// Construct an inbound TRANS pulse.
+    pub fn new_trans_in(origin: DotId, value: f64, tick: u64, source: PulseSource) -> Self {
+        let mut pulse = Self::value_pulse(origin, value, value.abs(), tick);
         pulse.pulse_type = PulseType::Trans;
         pulse.source = source;
         pulse.trans_direction = TransDirection::In;
         pulse
     }
 
-    pub fn new_trans_out(
-        origin: DotId, value: f64, intensity: f64, tick: u64, source: PulseSource,
-    ) -> Self {
-        let mut pulse = Self::value_pulse(origin, value, intensity, tick);
+    /// Construct an outbound TRANS pulse.
+    pub fn new_trans_out(origin: DotId, value: f64, tick: u64, source: PulseSource) -> Self {
+        let mut pulse = Self::value_pulse(origin, value, value.abs(), tick);
         pulse.pulse_type = PulseType::Trans;
         pulse.source = source;
         pulse.trans_direction = TransDirection::Out;

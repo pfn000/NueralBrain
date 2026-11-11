@@ -41,7 +41,12 @@ impl BrainHandle {
         }
         let tick = self.current_tick.saturating_add(1);
         for (index, &value) in input.iter().enumerate() {
-            let pulse = Pulse::value_pulse(DotId(index as u64), value as f64, value.abs() as f64, tick);
+            let pulse = Pulse::new_external(
+                DotId(index as u64),
+                value as f64,
+                bionetic_core::pulse::PulseType::Value,
+                tick,
+            );
             let _ = self.engine.inject_multimodal_pulse(pulse);
         }
         self.engine.tick();
@@ -67,7 +72,8 @@ impl BrainHandle {
             return Err(SdkError::InvalidInput(format!("corpus {} is not present in this brain", target.0)));
         }
         let tick = self.current_tick.saturating_add(1);
-        for pulse in batch.into_pulses(tick) {
+        for mut pulse in batch.into_pulses(tick) {
+            pulse.source = bionetic_core::pulse::PulseSource::External;
             let _ = self.engine.inject_pulse_object(target, pulse);
         }
         self.engine.tick();
@@ -106,7 +112,10 @@ impl BrainHandle {
                 pulses.len(), self.config.max_input_pulses
             )));
         }
-        for pulse in pulses { let _ = self.engine.inject_multimodal_pulse(pulse); }
+        for mut pulse in pulses {
+            pulse.source = bionetic_core::pulse::PulseSource::External;
+            let _ = self.engine.inject_multimodal_pulse(pulse);
+        }
         self.engine.tick();
         self.current_tick = self.engine.tick;
         Ok(self.snapshot())
