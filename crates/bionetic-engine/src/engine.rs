@@ -637,7 +637,7 @@ impl BioneticEngine {
 
     /// Apply a global reward signal through the existing reward system.
     pub fn apply_reward(&mut self, reward: f32) {
-        self.reward(reward.clamp(-1.0, 1.0) as f64, "sdk", self.tick);
+        self.reward(reward.clamp(-1.0, 1.0) as f64, "sdk");
     }
 
     /// Enter dream state.
