@@ -65,14 +65,20 @@ impl BioneticEngine {
     fn initialize(&mut self) {
         // Create corpora
         let regions = vec![
-            (CorpusId(0), "Sensory", CorpusType::Sensory),
-            (CorpusId(1), "Prefrontal", CorpusType::Prefrontal),
-            (CorpusId(2), "Association", CorpusType::Association),
-            (CorpusId(3), "Hippocampus", CorpusType::Hippocampus),
-            (CorpusId(4), "Reward", CorpusType::Reward),
-            (CorpusId(5), "Motor", CorpusType::Motor),
-            (CorpusId(6), "LongTermMemory", CorpusType::LongTermMemory),
-            (CorpusId(7), "Dream", CorpusType::Dream),
+            (SENSORY_IN, "SensoryIn", CorpusType::Sensory),
+            (SENSORY_OUT, "SensoryOut", CorpusType::SensoryOut),
+            (VISION, "Vision", CorpusType::Vision),
+            (PREFRONTAL, "Prefrontal", CorpusType::Prefrontal),
+            (ASSOCIATION, "Association", CorpusType::Association),
+            (RELATIONAL_CONTEXT, "RelationalContext", CorpusType::RelationalContext),
+            (SHORT_TERM_MEMORY, "ShortTermMemory", CorpusType::ShortTermMemory),
+            (HIPPOCAMPUS, "Hippocampus", CorpusType::Hippocampus),
+            (LONG_TERM_MEMORY, "LongTermMemory", CorpusType::LongTermMemory),
+            (REWARD, "Reward", CorpusType::Reward),
+            (MOTOR, "Motor", CorpusType::Motor),
+            (DREAM, "Dream", CorpusType::Dream),
+            (AUDITORY, "Auditory", CorpusType::Auditory),
+            (SPEECH_MOTOR, "SpeechMotor", CorpusType::SpeechMotor),
         ];
 
         for (id, name, ctype) in regions {
@@ -80,14 +86,14 @@ impl BioneticEngine {
         }
 
         // Seed dots
-        for corpus_id in 0..8u32 {
+        for corpus_id in 0..CORPUS_COUNT_TOTAL as u32 {
             for _ in 0..64 {
                 self.spawn_dot(CorpusId(corpus_id));
             }
         }
 
         // Create random intra-corpus connections
-        for corpus_id in 0..8u32 {
+        for corpus_id in 0..CORPUS_COUNT_TOTAL as u32 {
             let cid = CorpusId(corpus_id);
             let dot_ids: Vec<DotId> = self.corpora[&cid].dots.keys().cloned().collect();
             let len = dot_ids.len();
@@ -119,14 +125,16 @@ impl BioneticEngine {
 
         // Trans-binary channels
         let channel_pairs = vec![
-            (CorpusId(0), CorpusId(2)), // Sensory ↔ Association
-            (CorpusId(2), CorpusId(1)), // Association ↔ Prefrontal
-            (CorpusId(2), CorpusId(3)), // Association ↔ Hippocampus
-            (CorpusId(2), CorpusId(4)), // Association ↔ Reward
-            (CorpusId(1), CorpusId(5)), // Prefrontal ↔ Motor
-            (CorpusId(3), CorpusId(6)), // Hippocampus ↔ LTM
-            (CorpusId(7), CorpusId(3)), // Dream ↔ Hippocampus
-            (CorpusId(7), CorpusId(2)), // Dream ↔ Association
+            (SENSORY_IN, VISION),
+            (VISION, PREFRONTAL),
+            (VISION, HIPPOCAMPUS),
+            (VISION, REWARD),
+            (PREFRONTAL, MOTOR),
+            (HIPPOCAMPUS, LONG_TERM_MEMORY),
+            (DREAM, HIPPOCAMPUS),
+            (DREAM, ASSOCIATION),
+            (SENSORY_IN, SENSORY_OUT),
+            (RELATIONAL_CONTEXT, SHORT_TERM_MEMORY),
         ];
 
         for (a, b) in channel_pairs {
@@ -197,8 +205,8 @@ impl BioneticEngine {
 
     fn tick_drowsy(&mut self) {
         self.deliver_pulses();
-        self.process_corpus(CorpusId(1));
-        self.process_corpus(CorpusId(3));
+        self.process_corpus(PREFRONTAL);
+        self.process_corpus(HIPPOCAMPUS);
         self.update_chemicals();
         self.update_fatigue();
     }
@@ -555,7 +563,7 @@ impl BioneticEngine {
                 }
             }
         }
-        for index in 8..num_corpora {
+        for index in CORPUS_COUNT_TOTAL..num_corpora {
             let id = CorpusId(index as u32);
             let name = format!("Custom-{index}");
             engine.corpora.insert(id, Corpus::new(id, &name, CorpusType::Association));
@@ -628,7 +636,7 @@ impl BioneticEngine {
 
     /// Read motor-cortex potentials in stable dot-ID order.
     pub fn read_motor_output(&self) -> Vec<f32> {
-        let mut values: Vec<(DotId, f32)> = self.corpora.get(&CorpusId(5))
+        let mut values: Vec<(DotId, f32)> = self.corpora.get(&MOTOR)
             .map(|corpus| corpus.dots.values().map(|dot| (dot.id, dot.potential as f32)).collect())
             .unwrap_or_default();
         values.sort_by_key(|(id, _)| id.0);
@@ -832,7 +840,7 @@ impl BioneticEngine {
     /// hashing maps additional addresses onto existing sensory dots.
     /// Returns the physical target dot, or None if the sensory corpus is absent.
     pub fn inject_multimodal_pulse(&mut self, pulse: Pulse) -> Option<DotId> {
-        let sensory_corpus = CorpusId(0);
+        let sensory_corpus = SENSORY_IN;
         if !self.corpora.contains_key(&sensory_corpus) {
             return None;
         }

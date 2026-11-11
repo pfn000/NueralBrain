@@ -15,6 +15,7 @@ pub mod bundle;
 pub mod trans;
 pub mod neurogenesis;
 pub mod multimodal;
+pub mod region;
 
 // Re-exports
 pub use ids::*;
@@ -27,3 +28,4 @@ pub use corpus::*;
 pub use clump::*;
 pub use bundle::*;
 pub use trans::*;
+pub use region::{RegionState, RegionStatus};
