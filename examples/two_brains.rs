@@ -3,7 +3,6 @@
 //! WebRTC DataChannel, or TCP socket.
 
 use bionetic_core::ids::DotId;
-use bionetic_core::ids::CorpusId;
 use bionetic_core::{SENSORY_IN, SENSORY_OUT, VISION, PREFRONTAL};
 use bionetic_core::pulse::Pulse;
 use bionetic_engine::brain_protocol::{BrainNetwork, PROTOCOL_VERSION};
