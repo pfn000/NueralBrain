@@ -5,18 +5,13 @@ use crate::error::{SdkError, SdkResult};
 use serde::{Deserialize, Serialize};
 
 /// Serialization format for saved state.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum SaveFormat {
     /// Human-readable JSON (debug-friendly, large).
+    #[default]
     Json,
     /// Pretty-printed JSON (bigger, easier to inspect).
     JsonPretty,
-}
-
-impl Default for SaveFormat {
-    fn default() -> Self {
-        SaveFormat::Json
-    }
 }
 
 /// A versioned bundle containing all state needed to restore a brain.

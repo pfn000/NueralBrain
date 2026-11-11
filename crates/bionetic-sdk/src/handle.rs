@@ -5,7 +5,7 @@ use crate::error::{SdkError, SdkResult};
 use crate::input::InputBatch;
 use crate::output::BrainOutput;
 use crate::persistence::{SaveFormat, StateBundle};
-use bionetic_core::ids::{CorpusId, DotId};
+use bionetic_core::ids::DotId;
 use bionetic_core::pulse::Pulse;
 use bionetic_engine::engine::BioneticEngine;
 
@@ -179,6 +179,7 @@ impl BrainHandle {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use bionetic_core::ids::CorpusId;
     use crate::builder::BrainBuilder;
 
     #[test]
