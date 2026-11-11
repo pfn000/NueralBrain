@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use bionetic_core::*;
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, serde::Serialize, serde::Deserialize)]
 pub enum DreamPhase {
     Replay,
     Reflect,
@@ -11,6 +11,7 @@ pub enum DreamPhase {
     SelfJudge,
 }
 
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct DreamEngine {
     pub phase: DreamPhase,
     pub cycle: u64,

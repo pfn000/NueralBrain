@@ -6,7 +6,7 @@ use crate::dream::DreamEngine;
 use bionetic_core::neurogenesis::{NeuroEvent, NeurogenesisController};
 
 /// A pulse scheduled for delivery
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct PulseDelivery {
     pub pulse: Pulse,
     pub target_dot: DotId,
@@ -36,6 +36,8 @@ pub struct BioneticEngine {
     neurogenesis: NeurogenesisController,
     /// Maps logical modality addresses to physical sensory-corpus dots.
     multimodal_dot_map: HashMap<DotId, DotId>,
+    neurogenesis_enabled: bool,
+    last_propagated_pulses: usize,
 }
 
 impl BioneticEngine {
@@ -51,6 +53,8 @@ impl BioneticEngine {
             reward_system: RewardSystem::new(),
             neurogenesis: NeurogenesisController::empty(),
             multimodal_dot_map: HashMap::new(),
+            neurogenesis_enabled: true,
+            last_propagated_pulses: 0,
         };
 
         engine.initialize();
@@ -151,6 +155,7 @@ impl BioneticEngine {
 
     pub fn tick(&mut self) {
         self.tick += 1;
+        self.last_propagated_pulses = 0;
 
         match self.state {
             SystemState::Awake => self.tick_awake(),
@@ -160,7 +165,9 @@ impl BioneticEngine {
             SystemState::Booting => {}
         }
 
-        self.tick_neurogenesis();
+        if self.neurogenesis_enabled {
+            self.tick_neurogenesis();
+        }
     }
 
     // Keep modulo checks compatible with the documented Rust 1.75+ floor.
@@ -299,6 +306,7 @@ impl BioneticEngine {
             }
         }
 
+        self.last_propagated_pulses = self.last_propagated_pulses.saturating_add(new_deliveries.len());
         for delivery in new_deliveries {
             self.pulse_queue.push_back(delivery);
         }
@@ -525,6 +533,265 @@ impl BioneticEngine {
 
     pub fn discipline(&mut self, magnitude: f64, behavior: &str) {
         self.reward_system.discipline(magnitude, behavior, &mut self.corpora, self.tick);
+    }
+
+
+    /// Construct an engine with a selected number of corpora and initial dots per corpus.
+    pub fn with_config(num_corpora: usize, dots_per_corpus: usize, enable_neurogenesis: bool) -> Result<Self, String> {
+        if num_corpora == 0 || num_corpora > 256 {
+            return Err("num_corpora must be between 1 and 256".to_string());
+        }
+        if dots_per_corpus == 0 || dots_per_corpus > 4096 {
+            return Err("dots_per_corpus must be between 1 and 4096".to_string());
+        }
+        let mut engine = Self::new();
+        let old_ids: Vec<CorpusId> = engine.corpora.keys().copied().collect();
+        for id in old_ids {
+            if id.0 as usize >= num_corpora {
+                if let Some(corpus) = engine.corpora.remove(&id) {
+                    for dot_id in corpus.dots.keys() {
+                        engine.neurogenesis.unregister_dot(dot_id);
+                    }
+                }
+            }
+        }
+        for index in 8..num_corpora {
+            let id = CorpusId(index as u32);
+            let name = format!("Custom-{index}");
+            engine.corpora.insert(id, Corpus::new(id, &name, CorpusType::Association));
+        }
+        let valid: std::collections::HashSet<CorpusId> = engine.corpora.keys().copied().collect();
+        engine.trans_channels.retain(|channel| {
+            valid.contains(&channel.corpus_a) && valid.contains(&channel.corpus_b)
+        });
+        let ids: Vec<CorpusId> = engine.corpora.keys().copied().collect();
+        for corpus_id in ids {
+            let old_dots: Vec<DotId> = engine.corpora.get(&corpus_id)
+                .map(|corpus| corpus.dots.keys().copied().collect())
+                .unwrap_or_default();
+            if let Some(corpus) = engine.corpora.get_mut(&corpus_id) {
+                corpus.dots.clear();
+                corpus.gates.clear();
+                corpus.clumps.clear();
+                corpus.bundles.clear();
+            }
+            for dot in old_dots {
+                engine.neurogenesis.unregister_dot(&dot);
+            }
+            for _ in 0..dots_per_corpus {
+                engine.spawn_dot(corpus_id);
+            }
+            engine.connect_corpus(corpus_id);
+        }
+        engine.neurogenesis.config_mut().max_dots_per_corpus = dots_per_corpus;
+        engine.neurogenesis_enabled = enable_neurogenesis;
+        engine.state = SystemState::Awake;
+        Ok(engine)
+    }
+
+    fn connect_corpus(&mut self, corpus_id: CorpusId) {
+        let dot_ids: Vec<DotId> = match self.corpora.get(&corpus_id) {
+            Some(corpus) => corpus.dots.keys().copied().collect(),
+            None => return,
+        };
+        let len = dot_ids.len();
+        if len < 2 {
+            return;
+        }
+        for i in 0..len {
+            for j in 1..=(3 + (i % 4)) {
+                let target_idx = (i + j * 7 + j * j) % len;
+                if target_idx == i {
+                    continue;
+                }
+                let source = dot_ids[i];
+                let target = dot_ids[target_idx];
+                let gate = Gate::soft();
+                let gate_id = gate.id;
+                if let Some(corpus) = self.corpora.get_mut(&corpus_id) {
+                    corpus.gates.insert(gate_id, gate);
+                    if let Some(dot) = corpus.dots.get_mut(&source) {
+                        dot.add_branch(target, corpus_id, gate_id, 0.3 + (i as f64 * 0.01) % 0.7);
+                    }
+                    if let Some(dot) = corpus.dots.get_mut(&target) {
+                        dot.add_ending(source, gate_id, 0.3 + (i as f64 * 0.01) % 0.7);
+                    }
+                }
+            }
+        }
+    }
+
+    /// Whether the engine owns the specified corpus.
+    pub fn has_corpus(&self, id: CorpusId) -> bool {
+        self.corpora.contains_key(&id)
+    }
+
+    /// Read motor-cortex potentials in stable dot-ID order.
+    pub fn read_motor_output(&self) -> Vec<f32> {
+        let mut values: Vec<(DotId, f32)> = self.corpora.get(&CorpusId(5))
+            .map(|corpus| corpus.dots.values().map(|dot| (dot.id, dot.potential as f32)).collect())
+            .unwrap_or_default();
+        values.sort_by_key(|(id, _)| id.0);
+        values.into_iter().map(|(_, value)| value).collect()
+    }
+
+    /// Apply a global reward signal through the existing reward system.
+    pub fn apply_reward(&mut self, reward: f32) {
+        self.reward(reward.clamp(-1.0, 1.0) as f64, "sdk", self.tick);
+    }
+
+    /// Enter dream state.
+    pub fn enter_dream(&mut self) {
+        self.enter_sleep();
+    }
+
+    /// Return to awake state.
+    pub fn wake(&mut self) {
+        self.wake_up();
+    }
+
+    /// Snapshot average neurochemical levels across all dots.
+    pub fn chemical_snapshot(&self) -> ChemicalSnapshot {
+        let mut totals = [0.0f64; 6];
+        let mut count = 0usize;
+        for corpus in self.corpora.values() {
+            for dot in corpus.dots.values() {
+                totals[0] += dot.chemicals.dopamine;
+                totals[1] += dot.chemicals.serotonin;
+                totals[2] += dot.chemicals.cortisol;
+                totals[3] += dot.chemicals.acetylcholine;
+                totals[4] += dot.chemicals.gaba;
+                totals[5] += dot.chemicals.glutamate;
+                count += 1;
+            }
+        }
+        if count == 0 {
+            return ChemicalSnapshot::default();
+        }
+        let scale = 1.0 / count as f64;
+        ChemicalSnapshot::from_values(
+            (totals[0] * scale) as f32,
+            (totals[1] * scale) as f32,
+            (totals[2] * scale) as f32,
+            (totals[3] * scale) as f32,
+            (totals[4] * scale) as f32,
+            (totals[5] * scale) as f32,
+        )
+    }
+
+    /// Count dots that fired during the current engine tick.
+    pub fn active_dot_count(&self) -> usize {
+        self.corpora.values().flat_map(|corpus| corpus.dots.values())
+            .filter(|dot| dot.recent_fire_ticks.last().copied() == Some(self.tick))
+            .count()
+    }
+
+    /// Count pulse deliveries emitted by firing during the previous tick.
+    pub fn propagated_pulse_count(&self) -> usize {
+        self.last_propagated_pulses
+    }
+
+    /// Reset neurochemistry while preserving learned structure.
+    pub fn reset_chemicals(&mut self) {
+        for corpus in self.corpora.values_mut() {
+            corpus.ambient_chemicals = ChemicalState::resting();
+            for dot in corpus.dots.values_mut() {
+                dot.chemicals = ChemicalState::resting();
+            }
+        }
+        self.reward_system.global_reward = 0.0;
+    }
+
+    /// Inject a complete pulse into a chosen corpus, mapping its origin to a local dot.
+    pub fn inject_pulse_object(&mut self, corpus_id: CorpusId, mut pulse: Pulse) -> Option<DotId> {
+        let corpus = self.corpora.get(&corpus_id)?;
+        let mut available: Vec<DotId> = corpus.dots.keys().copied().collect();
+        if available.is_empty() {
+            return None;
+        }
+        available.sort_unstable();
+        let target = if corpus.dots.contains_key(&pulse.origin) {
+            pulse.origin
+        } else {
+            available[(pulse.origin.0 % available.len() as u64) as usize]
+        };
+        pulse.origin = target;
+        let gate = Gate::soft();
+        let delivery_tick = pulse.created_tick.max(self.tick.saturating_add(1));
+        self.pulse_queue.push_back(PulseDelivery {
+            pulse,
+            target_dot: target,
+            target_corpus: corpus_id,
+            target_gate: gate.id,
+            delivery_tick,
+        });
+        Some(target)
+    }
+
+    /// Serialize the engine's structural and dynamic state for SDK persistence.
+    pub fn serialize_state(&self) -> Result<Vec<u8>, String> {
+        #[derive(serde::Serialize)]
+        struct SnapshotRef<'a> {
+            corpora: &'a HashMap<CorpusId, Corpus>,
+            trans_channels: &'a Vec<TransBinaryChannel>,
+            pulse_queue: &'a VecDeque<PulseDelivery>,
+            tick: u64,
+            state: &'a SystemState,
+            dream_engine: &'a DreamEngine,
+            hippocampus: &'a HippocampalEngine,
+            reward_system: &'a RewardSystem,
+            neurogenesis: &'a NeurogenesisController,
+            multimodal_dot_map: &'a HashMap<DotId, DotId>,
+            neurogenesis_enabled: bool,
+            last_propagated_pulses: usize,
+        }
+        serde_json::to_vec(&SnapshotRef {
+            corpora: &self.corpora,
+            trans_channels: &self.trans_channels,
+            pulse_queue: &self.pulse_queue,
+            tick: self.tick,
+            state: &self.state,
+            dream_engine: &self.dream_engine,
+            hippocampus: &self.hippocampus,
+            reward_system: &self.reward_system,
+            neurogenesis: &self.neurogenesis,
+            multimodal_dot_map: &self.multimodal_dot_map,
+            neurogenesis_enabled: self.neurogenesis_enabled,
+            last_propagated_pulses: self.last_propagated_pulses,
+        }).map_err(|error| error.to_string())
+    }
+
+    /// Restore engine state from a snapshot produced by serialize_state.
+    pub fn deserialize_state(&mut self, bytes: &[u8]) -> Result<(), String> {
+        #[derive(serde::Deserialize)]
+        struct SnapshotOwned {
+            corpora: HashMap<CorpusId, Corpus>,
+            trans_channels: Vec<TransBinaryChannel>,
+            pulse_queue: VecDeque<PulseDelivery>,
+            tick: u64,
+            state: SystemState,
+            dream_engine: DreamEngine,
+            hippocampus: HippocampalEngine,
+            reward_system: RewardSystem,
+            neurogenesis: NeurogenesisController,
+            multimodal_dot_map: HashMap<DotId, DotId>,
+            neurogenesis_enabled: bool,
+            last_propagated_pulses: usize,
+        }
+        let snapshot: SnapshotOwned = serde_json::from_slice(bytes).map_err(|error| error.to_string())?;
+        self.corpora = snapshot.corpora;
+        self.trans_channels = snapshot.trans_channels;
+        self.pulse_queue = snapshot.pulse_queue;
+        self.tick = snapshot.tick;
+        self.state = snapshot.state;
+        self.dream_engine = snapshot.dream_engine;
+        self.hippocampus = snapshot.hippocampus;
+        self.reward_system = snapshot.reward_system;
+        self.neurogenesis = snapshot.neurogenesis;
+        self.multimodal_dot_map = snapshot.multimodal_dot_map;
+        self.neurogenesis_enabled = snapshot.neurogenesis_enabled;
+        self.last_propagated_pulses = snapshot.last_propagated_pulses;
+        Ok(())
     }
 
     pub fn status(&self) -> String {

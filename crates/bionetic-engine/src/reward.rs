@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use bionetic_core::*;
 
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct RewardSystem {
     pub global_reward: f64,
     pub action_outcomes: HashMap<String, f64>,

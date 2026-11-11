@@ -1,7 +1,7 @@
 use std::collections::{HashMap, VecDeque};
 use bionetic_core::*;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct MemoryEntry {
     pub id: u64,
     pub created_tick: u64,
@@ -11,6 +11,7 @@ pub struct MemoryEntry {
     pub tags: Vec<String>,
 }
 
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct HippocampalEngine {
     pub short_term: VecDeque<MemoryEntry>,
     pub stm_capacity: usize,
