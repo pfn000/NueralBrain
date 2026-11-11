@@ -21,12 +21,13 @@ url = { version = "=2.5.4", optional = true }
 idna = { version = "=1.0.3", optional = true }
 idna_adapter = { version = "=1.1.0", optional = true }
 indexmap = { version = "=2.7.1", optional = true }
+utf8_iter = { version = "=1.0.4", optional = true }
 scraper = { version = "0.19", optional = true }
 
 [features]
 default = ["corpus-json"]
 corpus-json = ["dep:serde", "dep:serde_json"]
-web = ["dep:ureq", "dep:url", "dep:idna", "dep:idna_adapter", "dep:indexmap", "dep:scraper"]
+web = ["dep:ureq", "dep:url", "dep:idna", "dep:idna_adapter", "dep:indexmap", "dep:utf8_iter", "dep:scraper"]
 agent = ["dep:bionetic-agent", "dep:parking_lot"]
 full = ["corpus-json", "web", "agent"]
 
