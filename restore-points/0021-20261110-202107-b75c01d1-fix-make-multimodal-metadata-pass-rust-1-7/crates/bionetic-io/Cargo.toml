@@ -1,0 +1,15 @@
+[package]
+name = "bionetic-io"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Serialization and I/O layer for NeuralBrain."
+
+[dependencies]
+bionetic-core = { path = "../bionetic-core" }
+# Phase 1 encoder/decoder source imports BioneticEngine directly; retain this dependency.
+bionetic-engine = { path = "../bionetic-engine" }
+serde = { workspace = true }
+serde_json = { workspace = true }

@@ -1,0 +1,60 @@
+[package]
+name = "bionetic-agent"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+description = "Permission-gated effectors that translate motor-cortex activity into actions."
+
+[dependencies]
+bionetic-core = { path = "../bionetic-core" }
+bionetic-engine = { path = "../bionetic-engine" }
+thiserror = { workspace = true }
+parking_lot = "0.12"
+serde = { workspace = true, optional = true }
+serde_json = { workspace = true, optional = true }
+
+ureq = { version = "2.10", optional = true, default-features = false, features = ["tls"] }
+url = { version = "=2.5.4", optional = true }
+idna = { version = "=1.0.3", optional = true }
+idna_adapter = { version = "=1.1.0", optional = true }
+indexmap = { version = "=2.7.1", optional = true }
+encoding_rs = { version = "=0.8.35", optional = true }
+utf8_iter = { version = "=1.0.4", optional = true }
+chromiumoxide = { version = "0.5", optional = true, default-features = false, features = ["tokio-runtime"] }
+futures = { version = "0.3", optional = true }
+tokio = { version = "=1.43.1", optional = true, features = ["rt", "macros", "time"] }
+tokio-util = { version = "=0.7.12", optional = true, default-features = false }
+home = { version = "=0.5.9", optional = true }
+zeroize = { version = "=1.8.1", optional = true }
+
+[features]
+default = []
+serde = ["dep:serde", "dep:serde_json"]
+effector-http = ["dep:ureq", "dep:url", "dep:idna", "dep:idna_adapter", "dep:utf8_iter"]
+effector-shell = []
+effector-fs = []
+effector-code = []
+effector-browser-iris = ["dep:url", "dep:idna"]
+effector-browser-cdp = ["dep:chromiumoxide", "dep:futures", "dep:tokio", "dep:tokio-util", "dep:url", "dep:idna", "dep:idna_adapter", "dep:home", "dep:zeroize", "dep:indexmap", "dep:encoding_rs", "dep:utf8_iter"]
+all-effectors = [
+    "effector-http",
+    "effector-shell",
+    "effector-fs",
+    "effector-code",
+    "effector-browser-cdp",
+]
+
+[dev-dependencies]
+bionetic-sdk = { path = "../bionetic-sdk" }
+tempfile = "=3.10.1"
+
+[[example]]
+name = "agent_browse"
+required-features = ["effector-browser-cdp"]
+
+[[example]]
+name = "agent_shell"
+required-features = ["effector-shell"]

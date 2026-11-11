@@ -1,0 +1,139 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 550" width="900" height="550">
+  <defs>
+    <radialGradient id="abg" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#111820"/>
+      <stop offset="100%" stop-color="#0a0e14"/>
+    </radialGradient>
+    <marker id="arrowG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#00ff88" fill-opacity="0.6"/>
+    </marker>
+    <marker id="arrowB" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#00ccff" fill-opacity="0.6"/>
+    </marker>
+    <filter id="ab">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1"/>
+    </filter>
+  </defs>
+
+  <rect width="900" height="550" fill="url(#abg)"/>
+
+  <!-- Title -->
+  <text x="450" y="30" text-anchor="middle" font-family="monospace" font-size="16" fill="#e6e6e6" letter-spacing="3">SYSTEM ARCHITECTURE</text>
+  <line x1="300" y1="38" x2="600" y2="38" stroke="#00ff88" stroke-opacity="0.2"/>
+
+  <!-- Sensory Corpus -->
+  <rect x="50" y="80" width="160" height="80" rx="8" fill="#0d1117" stroke="#00ff88" stroke-opacity="0.4"/>
+  <text x="130" y="108" text-anchor="middle" font-family="monospace" font-size="12" fill="#00ff88">SENSORY</text>
+  <text x="130" y="125" text-anchor="middle" font-family="monospace" font-size="9" fill="#00ff88" fill-opacity="0.5">Corpus 0</text>
+  <text x="130" y="145" text-anchor="middle" font-family="monospace" font-size="9" fill="#888">Input Encoding</text>
+  <circle cx="70" cy="100" r="3" fill="#00ff88" fill-opacity="0.5"/>
+  <circle cx="85" cy="110" r="2.5" fill="#00ff88" fill-opacity="0.4"/>
+  <circle cx="75" cy="125" r="2" fill="#00ccff" fill-opacity="0.4"/>
+  <circle cx="90" cy="135" r="3" fill="#00ff88" fill-opacity="0.3"/>
+
+  <!-- Prefrontal Corpus -->
+  <rect x="370" y="80" width="160" height="80" rx="8" fill="#0d1117" stroke="#00ccff" stroke-opacity="0.4"/>
+  <text x="450" y="108" text-anchor="middle" font-family="monospace" font-size="12" fill="#00ccff">PREFRONTAL</text>
+  <text x="450" y="125" text-anchor="middle" font-family="monospace" font-size="9" fill="#00ccff" fill-opacity="0.5">Corpus 1</text>
+  <text x="450" y="145" text-anchor="middle" font-family="monospace" font-size="9" fill="#888">Executive / Reasoning</text>
+  <circle cx="390" cy="100" r="3" fill="#00ccff" fill-opacity="0.5"/>
+  <circle cx="405" cy="115" r="2.5" fill="#00ccff" fill-opacity="0.4"/>
+  <circle cx="395" cy="130" r="2" fill="#00ff88" fill-opacity="0.4"/>
+
+  <!-- Association Corpus (center, larger) -->
+  <rect x="200" y="210" width="280" height="90" rx="8" fill="#0d1117" stroke="#00ff88" stroke-opacity="0.6" stroke-width="1.5"/>
+  <text x="340" y="240" text-anchor="middle" font-family="monospace" font-size="13" fill="#00ff88">ASSOCIATION</text>
+  <text x="340" y="257" text-anchor="middle" font-family="monospace" font-size="9" fill="#00ff88" fill-opacity="0.5">Corpus 2 — Central Hub</text>
+  <text x="340" y="277" text-anchor="middle" font-family="monospace" font-size="9" fill="#888">Clump Formation · Pattern Matching</text>
+  <text x="340" y="290" text-anchor="middle" font-family="monospace" font-size="9" fill="#888">Integration · Reasoning</text>
+  <!-- Clump visualization -->
+  <circle cx="230" cy="250" r="4" fill="#00ff88" fill-opacity="0.5">
+    <animate attributeName="r" values="4;6;4" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="240" cy="260" r="3" fill="#00ff88" fill-opacity="0.4"/>
+  <circle cx="250" cy="248" r="3.5" fill="#00ff88" fill-opacity="0.4"/>
+  <line x1="230" y1="250" x2="240" y2="260" stroke="#00ff88" stroke-opacity="0.3"/>
+  <line x1="230" y1="250" x2="250" y2="248" stroke="#00ff88" stroke-opacity="0.3"/>
+  <line x1="240" y1="260" x2="250" y2="248" stroke="#00ff88" stroke-opacity="0.3"/>
+
+  <!-- Hippocampus -->
+  <rect x="50" y="360" width="160" height="80" rx="8" fill="#0d1117" stroke="#ffaa00" stroke-opacity="0.4"/>
+  <text x="130" y="388" text-anchor="middle" font-family="monospace" font-size="12" fill="#ffaa00">HIPPOCAMPUS</text>
+  <text x="130" y="405" text-anchor="middle" font-family="monospace" font-size="9" fill="#ffaa00" fill-opacity="0.5">Corpus 3</text>
+  <text x="130" y="425" text-anchor="middle" font-family="monospace" font-size="9" fill="#888">Memory Gates</text>
+
+  <!-- Reward -->
+  <rect x="260" y="360" width="160" height="80" rx="8" fill="#0d1117" stroke="#ff4488" stroke-opacity="0.4"/>
+  <text x="340" y="388" text-anchor="middle" font-family="monospace" font-size="12" fill="#ff4488">REWARD</text>
+  <text x="340" y="405" text-anchor="middle" font-family="monospace" font-size="9" fill="#ff4488" fill-opacity="0.5">Corpus 4</text>
+  <text x="340" y="425" text-anchor="middle" font-family="monospace" font-size="9" fill="#888">Dopamine / Cortisol</text>
+
+  <!-- Motor -->
+  <rect x="470" y="360" width="160" height="80" rx="8" fill="#0d1117" stroke="#00ccff" stroke-opacity="0.4"/>
+  <text x="550" y="388" text-anchor="middle" font-family="monospace" font-size="12" fill="#00ccff">MOTOR</text>
+  <text x="550" y="405" text-anchor="middle" font-family="monospace" font-size="9" fill="#00ccff" fill-opacity="0.5">Corpus 5</text>
+  <text x="550" y="425" text-anchor="middle" font-family="monospace" font-size="9" fill="#888">Output / Actions</text>
+
+  <!-- Long-Term Memory -->
+  <rect x="50" y="480" width="370" height="55" rx="8" fill="#0d1117" stroke="#8844ff" stroke-opacity="0.4"/>
+  <text x="235" y="507" text-anchor="middle" font-family="monospace" font-size="12" fill="#8844ff">LONG-TERM MEMORY</text>
+  <text x="235" y="525" text-anchor="middle" font-family="monospace" font-size="9" fill="#888">Corpus 6 — Persistent Structural Storage</text>
+
+  <!-- Dream -->
+  <rect x="680" y="210" width="160" height="90" rx="8" fill="#0d1117" stroke="#aa66ff" stroke-opacity="0.4" stroke-dasharray="4,4"/>
+  <text x="760" y="240" text-anchor="middle" font-family="monospace" font-size="12" fill="#aa66ff">DREAM</text>
+  <text x="760" y="257" text-anchor="middle" font-family="monospace" font-size="9" fill="#aa66ff" fill-opacity="0.5">Corpus 7</text>
+  <text x="760" y="277" text-anchor="middle" font-family="monospace" font-size="9" fill="#888">Sleep Processing</text>
+  <text x="760" y="290" text-anchor="middle" font-family="monospace" font-size="9" fill="#888">Consolidation</text>
+
+  <!-- Connections (Trans-Binary) -->
+  <!-- Sensory ↔ Association -->
+  <line x1="130" y1="160" x2="280" y2="210" stroke="#00ff88" stroke-opacity="0.3" marker-end="url(#arrowG)"/>
+  <line x1="280" y1="210" x2="130" y2="160" stroke="#00ff88" stroke-opacity="0.15" stroke-dasharray="3,3"/>
+  <text x="180" y="180" font-family="monospace" font-size="7" fill="#00ff88" fill-opacity="0.4">TRANS</text>
+
+  <!-- Sensory ↔ Prefrontal -->
+  <line x1="210" y1="120" x2="370" y2="120" stroke="#00ccff" stroke-opacity="0.3" marker-end="url(#arrowB)"/>
+  <line x1="370" y1="120" x2="210" y2="120" stroke="#00ccff" stroke-opacity="0.15" stroke-dasharray="3,3"/>
+  <text x="290" y="114" font-family="monospace" font-size="7" fill="#00ccff" fill-opacity="0.4">TRANS</text>
+
+  <!-- Prefrontal ↔ Association -->
+  <line x1="450" y1="160" x2="400" y2="210" stroke="#00ccff" stroke-opacity="0.3" marker-end="url(#arrowB)"/>
+  <line x1="400" y1="210" x2="450" y2="160" stroke="#00ccff" stroke-opacity="0.15" stroke-dasharray="3,3"/>
+
+  <!-- Association → Hippocampus -->
+  <line x1="280" y1="300" x2="130" y2="360" stroke="#ffaa00" stroke-opacity="0.3" marker-end="url(#arrowG)"/>
+
+  <!-- Association → Reward -->
+  <line x1="340" y1="300" x2="340" y2="360" stroke="#ff4488" stroke-opacity="0.3" marker-end="url(#arrowG)"/>
+
+  <!-- Association → Motor -->
+  <line x1="420" y1="300" x2="520" y2="360" stroke="#00ccff" stroke-opacity="0.3" marker-end="url(#arrowB)"/>
+
+  <!-- Prefrontal → Motor -->
+  <line x1="530" y1="120" x2="580" y2="360" stroke="#00ccff" stroke-opacity="0.2" marker-end="url(#arrowB)" stroke-dasharray="4,4"/>
+
+  <!-- Hippocampus → LTM -->
+  <line x1="130" y1="440" x2="130" y2="480" stroke="#8844ff" stroke-opacity="0.3" marker-end="url(#arrowG)"/>
+
+  <!-- Dream ↔ Hippocampus -->
+  <path d="M 680,270 Q 600,340 210,400" fill="none" stroke="#aa66ff" stroke-opacity="0.2" stroke-dasharray="4,4" marker-end="url(#arrowG)"/>
+  <text x="500" y="330" font-family="monospace" font-size="7" fill="#aa66ff" fill-opacity="0.3">DREAM LINK</text>
+
+  <!-- Dream ↔ Association -->
+  <line x1="680" y1="250" x2="480" y2="250" stroke="#aa66ff" stroke-opacity="0.2" stroke-dasharray="4,4" marker-end="url(#arrowG)"/>
+
+  <!-- Legend -->
+  <rect x="650" y="380" width="220" height="140" rx="6" fill="#0d1117" stroke="#333" stroke-opacity="0.5"/>
+  <text x="760" y="400" text-anchor="middle" font-family="monospace" font-size="10" fill="#888">LEGEND</text>
+  <line x1="670" y1="420" x2="710" y2="420" stroke="#00ff88" stroke-opacity="0.5"/>
+  <text x="720" y="424" font-family="monospace" font-size="9" fill="#666">Trans-Binary (fwd)</text>
+  <line x1="670" y1="440" x2="710" y2="440" stroke="#00ff88" stroke-opacity="0.3" stroke-dasharray="3,3"/>
+  <text x="720" y="444" font-family="monospace" font-size="9" fill="#666">Trans-Binary (rev)</text>
+  <line x1="670" y1="460" x2="710" y2="460" stroke="#aa66ff" stroke-opacity="0.3" stroke-dasharray="4,4"/>
+  <text x="720" y="464" font-family="monospace" font-size="9" fill="#666">Dream Channel</text>
+  <circle cx="675" cy="482" r="3" fill="#00ff88" fill-opacity="0.5"/>
+  <text x="720" y="486" font-family="monospace" font-size="9" fill="#666">Dot (Neuron)</text>
+  <rect x="670" y="496" width="12" height="8" rx="2" fill="none" stroke="#00ff88" stroke-opacity="0.3"/>
+  <text x="720" y="505" font-family="monospace" font-size="9" fill="#666">Corpus (Region)</text>
+</svg>

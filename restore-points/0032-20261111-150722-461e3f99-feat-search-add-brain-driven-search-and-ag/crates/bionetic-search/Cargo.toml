@@ -1,0 +1,36 @@
+[package]
+name = "bionetic-search"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+description = "Brain-driven concept-slot search: local corpus and optional allowlisted web retrieval."
+
+[dependencies]
+bionetic-core = { path = "../bionetic-core" }
+bionetic-engine = { path = "../bionetic-engine" }
+bionetic-agent = { path = "../bionetic-agent", optional = true }
+thiserror = { workspace = true }
+parking_lot = { version = "0.12", optional = true }
+serde = { workspace = true, optional = true }
+serde_json = { workspace = true, optional = true }
+ureq = { version = "2.10", optional = true, default-features = false, features = ["tls"] }
+url = { version = "2.5", optional = true }
+scraper = { version = "0.19", optional = true }
+
+[features]
+default = ["corpus-json"]
+corpus-json = ["dep:serde", "dep:serde_json"]
+web = ["dep:ureq", "dep:url", "dep:scraper"]
+agent = ["dep:bionetic-agent", "dep:parking_lot"]
+full = ["corpus-json", "web", "agent"]
+
+[dev-dependencies]
+bionetic-sdk = { path = "../bionetic-sdk" }
+tempfile = "3.10"
+
+[[example]]
+name = "search_agent"
+required-features = ["agent"]

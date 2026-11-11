@@ -1,0 +1,28 @@
+[package]
+name = "bionetic-vision"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Vision processing pipeline for NeuralBrain — edge, color, motion, context binding."
+
+[features]
+default = []
+camera = ["dep:nokhwa"]
+# Kept as a local adapter shim until the actual Iris repository/API is supplied.
+iris = []
+file-source = ["dep:image"]
+full = ["camera", "iris", "file-source"]
+
+[dependencies]
+bionetic-core = { path = "../bionetic-core", features = ["multimodal"] }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+nokhwa = { version = "0.10", optional = true, features = ["input-native"] }
+image = { workspace = true, optional = true }
+
+[dev-dependencies]
+serde_json = { workspace = true }
+bionetic-sdk = { path = "../bionetic-sdk" }

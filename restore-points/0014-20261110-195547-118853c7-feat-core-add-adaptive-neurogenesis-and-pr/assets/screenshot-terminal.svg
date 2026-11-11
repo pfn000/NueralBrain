@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" width="900" height="500">
+  <defs>
+    <linearGradient id="ttb" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2d2d2d"/>
+      <stop offset="100%" stop-color="#1a1a1a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Window -->
+  <rect width="900" height="500" rx="8" fill="#0a0a0a" stroke="#333"/>
+  <rect width="900" height="32" rx="8" fill="url(#ttb)"/>
+  <rect x="0" y="24" width="900" height="8" fill="url(#ttb)"/>
+  <circle cx="20" cy="16" r="6" fill="#ff5f56"/>
+  <circle cx="40" cy="16" r="6" fill="#ffbd2e"/>
+  <circle cx="60" cy="16" r="6" fill="#27c93f"/>
+  <text x="450" y="20" text-anchor="middle" font-family="monospace" font-size="11" fill="#888">Terminal — cargo run --example basic_brain</text>
+
+  <!-- Terminal content -->
+  <g font-family="'SF Mono', 'Fira Code', 'Courier New', monospace" font-size="11">
+    <text x="20" y="55" fill="#888">$ cargo run --example basic_brain --release</text>
+    <text x="20" y="72" fill="#555">   Compiling bionetic-core v0.1.0</text>
+    <text x="20" y="86" fill="#555">   Compiling bionetic-engine v0.1.0</text>
+    <text x="20" y="100" fill="#555">   Compiling bionetic-io v0.1.0</text>
+    <text x="20" y="114" fill="#27c93f">    Finished release [optimized] target(s) in 2.34s</text>
+    <text x="20" y="128" fill="#27c93f">     Running `target/release/examples/basic_brain`</text>
+
+    <text x="20" y="150" fill="#00ff88">╔══════════════════════════════════════════════════════════╗</text>
+    <text x="20" y="164" fill="#00ff88">║          BIONETIC BRAIN — Initializing...                ║</text>
+    <text x="20" y="178" fill="#00ff88">╚══════════════════════════════════════════════════════════╝</text>
+
+    <text x="20" y="198" fill="#00ff88">[BOOT] Creating corpora...</text>
+    <text x="20" y="212" fill="#888">  ├── Sensory       (Corpus 0)  64 dots  ✓</text>
+    <text x="20" y="226" fill="#888">  ├── Prefrontal    (Corpus 1)  64 dots  ✓</text>
+    <text x="20" y="240" fill="#888">  ├── Association   (Corpus 2)  64 dots  ✓</text>
+    <text x="20" y="254" fill="#888">  ├── Hippocampus   (Corpus 3)  64 dots  ✓</text>
+    <text x="20" y="268" fill="#888">  ├── Reward        (Corpus 4)  64 dots  ✓</text>
+    <text x="20" y="282" fill="#888">  ├── Motor         (Corpus 5)  64 dots  ✓</text>
+    <text x="20" y="296" fill="#888">  ├── LongTermMem   (Corpus 6)  64 dots  ✓</text>
+    <text x="20" y="310" fill="#888">  └── Dream         (Corpus 7)  64 dots  ✓</text>
+
+    <text x="20" y="330" fill="#00ff88">[BOOT] Total: 512 dots, 0 connections</text>
+    <text x="20" y="344" fill="#00ff88">[BOOT] Establishing trans-binary channels...</text>
+    <text x="20" y="358" fill="#00ccff">[TRANS] Sensory ◄══► Association     ✓</text>
+    <text x="20" y="372" fill="#00ccff">[TRANS] Association ◄══► Prefrontal  ✓</text>
+    <text x="20" y="386" fill="#00ccff">[TRANS] Association ◄══► Hippocampus ✓</text>
+    <text x="20" y="400" fill="#00ccff">[TRANS] Hippocampus ◄══► LTM        ✓</text>
+    <text x="20" y="414" fill="#00ccff">[TRANS] Prefrontal ◄══► Motor       ✓</text>
+    <text x="20" y="428" fill="#aa66ff">[TRANS] Dream ◄══► Hippocampus      ✓</text>
+
+    <text x="20" y="448" fill="#27c93f">[READY] Brain online. State: Awake</text>
+    <text x="20" y="462" fill="#27c93f">[READY] Memory: 487 KB | CPU: 0.3%</text>
+
+    <text x="20" y="482" fill="#00ff88">[INPUT] Encoding "hello" → 5 chars → 28 pulses</text>
+
+    <!-- Blinking cursor -->
+    <rect x="20" y="487" width="8" height="2" fill="#00ff88">
+      <animate attributeName="fill-opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <!-- Right side stats panel -->
+  <rect x="600" y="140" width="280" height="250" rx="6" fill="#0d0d0d" stroke="#00ff8833"/>
+  <text x="740" y="162" text-anchor="middle" font-family="monospace" font-size="10" fill="#00ff88" letter-spacing="2">LIVE STATUS</text>
+  <line x1="620" y1="170" x2="860" y2="170" stroke="#00ff8822"/>
+
+  <g font-family="monospace" font-size="10">
+    <text x="620" y="190" fill="#888">Tick:</text>
+    <text x="780" y="190" fill="#00ffff" text-anchor="end">1,247</text>
+
+    <text x="620" y="208" fill="#888">Dots:</text>
+    <text x="780" y="208" fill="#00ffff" text-anchor="end">512</text>
+
+    <text x="620" y="226" fill="#888">Connections:</text>
+    <text x="780" y="226" fill="#00ffff" text-anchor="end">1,847</text>
+
+    <text x="620" y="244" fill="#888">Active Pulses:</text>
+    <text x="780" y="244" fill="#00ffff" text-anchor="end">89</text>
+
+    <text x="620" y="262" fill="#888">Clumps:</text>
+    <text x="780" y="262" fill="#00ffff" text-anchor="end">2</text>
+
+    <text x="620" y="280" fill="#888">Memory (STM):</text>
+    <text x="780" y="280" fill="#ffaa00" text-anchor="end">3 entries</text>
+
+    <text x="620" y="298" fill="#888">Memory (LTM):</text>
+    <text x="780" y="298" fill="#8844ff" text-anchor="end">0 entries</text>
+
+    <text x="620" y="320" fill="#888">Avg Fatigue:</text>
+    <text x="780" y="320" fill="#27c93f" text-anchor="end">0.02</text>
+
+    <text x="620" y="338" fill="#888">State:</text>
+    <text x="780" y="338" fill="#27c93f" text-anchor="end">AWAKE</text>
+
+    <text x="620" y="360" fill="#888">Dopamine:</text>
+    <text x="680" y="360" fill="#ff4488">▓▓░░░░░░░░</text>
+
+    <text x="620" y="375" fill="#888">Serotonin:</text>
+    <text x="680" y="375" fill="#4488ff">▓▓▓▓▓░░░░░</text>
+  </g>
+</svg>

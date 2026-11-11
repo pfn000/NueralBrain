@@ -1,0 +1,49 @@
+[workspace]
+resolver = "2"
+members = [
+    # ── Phase 1 crates ──
+    "crates/bionetic-core",
+    "crates/bionetic-engine",
+    "crates/bionetic-io",
+    "crates/bionetic-wasm",
+
+    # ── Phase 2 crates ──
+    "crates/bionetic-sdk",
+    "crates/bionetic-vision",
+    "crates/bionetic-search",
+    "crates/bionetic-swarm",
+    "crates/bionetic-distributed",
+]
+
+[workspace.package]
+version = "0.2.0"
+edition = "2021"
+license = "MIT"
+authors = ["NeuralBrain Contributors"]
+repository = "https://github.com/pfn000/NueralBrain"
+rust-version = "1.75"
+description = "Bionetic Processing Architecture — Intelligence from neural communication, not tokens."
+
+[workspace.dependencies]
+# Shared across all crates — use workspace = true in member Cargo.toml files.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+uuid = { version = "1", features = ["v4"] }
+thiserror = "1"
+wasm-bindgen = "0.2"
+js-sys = "0.3"
+web-sys = "0.3"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = true
+panic = "abort"
+
+[profile.release-wasm]
+inherits = "release"
+opt-level = "z"
+lto = "fat"
+codegen-units = 1

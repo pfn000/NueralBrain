@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bionetic Brain</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="header">
+        <h1>◉ BIONETIC BRAIN v0.1</h1>
+        <div id="status">
+            <span class="stat">DOTS: <span class="stat-value" id="s-dots">0</span></span>
+            <span class="stat">PULSES: <span class="stat-value" id="s-pulses">0</span></span>
+            <span class="stat">CLUMPS: <span class="stat-value" id="s-clumps">0</span></span>
+            <span class="stat">STATE: <span class="stat-value" id="s-state">BOOTING</span></span>
+            <span class="stat">TICK: <span class="stat-value" id="s-tick">0</span></span>
+        </div>
+    </div>
+    <div id="main">
+        <div id="viz">
+            <canvas id="brain-canvas"></canvas>
+        </div>
+        <div id="panel">
+            <div id="output">Bionetic Brain initializing...\n</div>
+            <div id="input-area">
+                <input id="input" type="text" placeholder="Send signal..." />
+                <button onclick="sendInput()">PULSE</button>
+            </div>
+            <div id="controls">
+                <button onclick="triggerReward(1.0)">⊕ REWARD</button>
+                <button onclick="triggerDiscipline(1.0)">⊖ DISCIPLINE</button>
+                <button onclick="enterSleep()">◑ SLEEP</button>
+                <button onclick="wakeUp()">◉ WAKE</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./app.js"></script>
+</body>
+</html>

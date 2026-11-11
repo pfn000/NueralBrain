@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" width="900" height="500">
+  <defs>
+    <linearGradient id="titleBar" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2d2d2d"/>
+      <stop offset="100%" stop-color="#1a1a1a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Window chrome -->
+  <rect width="900" height="500" rx="8" fill="#0a0a0a" stroke="#333" stroke-width="1"/>
+  <rect width="900" height="32" rx="8" fill="url(#titleBar)"/>
+  <rect x="0" y="24" width="900" height="8" fill="url(#titleBar)"/>
+
+  <!-- Traffic lights -->
+  <circle cx="20" cy="16" r="6" fill="#ff5f56"/>
+  <circle cx="40" cy="16" r="6" fill="#ffbd2e"/>
+  <circle cx="60" cy="16" r="6" fill="#27c93f"/>
+  <text x="450" y="20" text-anchor="middle" font-family="monospace" font-size="11" fill="#888">NeuralBrain — Bionetic Processing</text>
+
+  <!-- Header bar -->
+  <rect x="0" y="32" width="900" height="30" fill="#0d0d0d"/>
+  <line x1="0" y1="62" x2="900" y2="62" stroke="#00ff8844"/>
+  <text x="15" y="52" font-family="monospace" font-size="11" fill="#00ff88">◉ BIONETIC BRAIN v0.1</text>
+
+  <!-- Status bar items -->
+  <text x="350" y="52" font-family="monospace" font-size="9" fill="#00ff8888">DOTS: </text>
+  <text x="385" y="52" font-family="monospace" font-size="9" fill="#00ffff">847</text>
+  <text x="430" y="52" font-family="monospace" font-size="9" fill="#00ff8888">PULSES: </text>
+  <text x="475" y="52" font-family="monospace" font-size="9" fill="#00ffff">234</text>
+  <text x="520" y="52" font-family="monospace" font-size="9" fill="#00ff8888">CLUMPS: </text>
+  <text x="568" y="52" font-family="monospace" font-size="9" fill="#00ffff">12</text>
+  <text x="610" y="52" font-family="monospace" font-size="9" fill="#00ff8888">STATE: </text>
+  <text x="650" y="52" font-family="monospace" font-size="9" fill="#27c93f">AWAKE</text>
+  <text x="710" y="52" font-family="monospace" font-size="9" fill="#00ff8888">TICK: </text>
+  <text x="745" y="52" font-family="monospace" font-size="9" fill="#00ffff">45,821</text>
+
+  <!-- Main content area split -->
+  <!-- Left: Visualization area -->
+  <rect x="1" y="63" width="580" height="436" fill="#080808"/>
+
+  <!-- Neural visualization (dots and connections) -->
+  <g transform="translate(290,270)">
+    <!-- Connections -->
+    <g stroke="#00ff88" stroke-opacity="0.15" stroke-width="1">
+      <line x1="-120" y1="-80" x2="-60" y2="-40"/>
+      <line x1="-120" y1="-80" x2="-80" y2="20"/>
+      <line x1="-60" y1="-40" x2="0" y2="-20"/>
+      <line x1="-60" y1="-40" x2="-20" y2="40"/>
+      <line x1="-80" y1="20" x2="-20" y2="40"/>
+      <line x1="0" y1="-20" x2="60" y2="-60"/>
+      <line x1="0" y1="-20" x2="40" y2="30"/>
+      <line x1="-20" y1="40" x2="40" y2="30"/>
+      <line x1="60" y1="-60" x2="120" y2="-30"/>
+      <line x1="60" y1="-60" x2="100" y2="20"/>
+      <line x1="40" y1="30" x2="100" y2="20"/>
+      <line x1="120" y1="-30" x2="180" y2="-50"/>
+      <line x1="100" y1="20" x2="160" y2="40"/>
+      <line x1="120" y1="-30" x2="160" y2="40"/>
+      <!-- More scattered connections -->
+      <line x1="-200" y1="-120" x2="-120" y2="-80"/>
+      <line x1="-180" y1="80" x2="-80" y2="20"/>
+      <line x1="180" y1="-50" x2="230" y2="-80"/>
+      <line x1="160" y1="40" x2="220" y2="80"/>
+      <line x1="-150" y1="-150" x2="-120" y2="-80"/>
+      <line x1="0" y1="-120" x2="0" y2="-20"/>
+      <line x1="-40" y1="100" x2="-20" y2="40"/>
+      <line x1="80" y1="100" x2="40" y2="30"/>
+    </g>
+
+    <!-- Active pulse line -->
+    <line x1="-60" y1="-40" x2="0" y2="-20" stroke="#00ff88" stroke-opacity="0.6" stroke-width="2">
+      <animate attributeName="stroke-opacity" values="0.2;0.8;0.2" dur="1s" repeatCount="indefinite"/>
+    </line>
+    <line x1="0" y1="-20" x2="60" y2="-60" stroke="#00ccff" stroke-opacity="0.6" stroke-width="2">
+      <animate attributeName="stroke-opacity" values="0.2;0.8;0.2" dur="1s" repeatCount="indefinite" begin="0.3s"/>
+    </line>
+
+    <!-- Dots -->
+    <circle cx="-200" cy="-120" r="3" fill="#00ff88" fill-opacity="0.3"/>
+    <circle cx="-150" cy="-150" r="2.5" fill="#00ccff" fill-opacity="0.3"/>
+    <circle cx="-120" cy="-80" r="5" fill="#00ff88" fill-opacity="0.5"/>
+    <circle cx="-80" cy="20" r="4" fill="#00ccff" fill-opacity="0.4"/>
+    <circle cx="-60" cy="-40" r="6" fill="#00ff88" fill-opacity="0.7">
+      <animate attributeName="r" values="6;9;6" dur="1s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="0" cy="-120" r="3" fill="#00ff88" fill-opacity="0.3"/>
+    <circle cx="0" cy="-20" r="5" fill="#00ff88" fill-opacity="0.6">
+      <animate attributeName="r" values="5;8;5" dur="1s" repeatCount="indefinite" begin="0.3s"/>
+    </circle>
+    <circle cx="-20" cy="40" r="4" fill="#00ccff" fill-opacity="0.4"/>
+    <circle cx="60" cy="-60" r="5" fill="#00ff88" fill-opacity="0.6">
+      <animate attributeName="r" values="5;7;5" dur="1.5s" repeatCount="indefinite" begin="0.6s"/>
+    </circle>
+    <circle cx="40" cy="30" r="4" fill="#00ff88" fill-opacity="0.5"/>
+    <circle cx="120" cy="-30" r="5" fill="#00ccff" fill-opacity="0.5"/>
+    <circle cx="100" cy="20" r="4" fill="#00ff88" fill-opacity="0.4"/>
+    <circle cx="180" cy="-50" r="4" fill="#00ff88" fill-opacity="0.4"/>
+    <circle cx="160" cy="40" r="3.5" fill="#00ccff" fill-opacity="0.4"/>
+    <circle cx="230" cy="-80" r="3" fill="#00ff88" fill-opacity="0.3"/>
+    <circle cx="220" cy="80" r="3" fill="#00ccff" fill-opacity="0.3"/>
+    <circle cx="-180" cy="80" r="3" fill="#00ff88" fill-opacity="0.3"/>
+    <circle cx="-40" cy="100" r="2.5" fill="#00ccff" fill-opacity="0.3"/>
+    <circle cx="80" cy="100" r="3" fill="#00ff88" fill-opacity="0.3"/>
+
+    <!-- Clump highlight -->
+    <ellipse cx="0" cy="-40" rx="80" ry="50" fill="none" stroke="#00ff88" stroke-opacity="0.1" stroke-dasharray="4,4">
+      <animate attributeName="stroke-opacity" values="0.05;0.15;0.05" dur="3s" repeatCount="indefinite"/>
+    </ellipse>
+    <text x="0" y="-75" text-anchor="middle" font-family="monospace" font-size="8" fill="#00ff88" fill-opacity="0.3">CLUMP #7</text>
+  </g>
+
+  <!-- Corpus labels in viz -->
+  <text x="60" y="90" font-family="monospace" font-size="8" fill="#00ff88" fill-opacity="0.2">SENSORY</text>
+  <text x="250" y="90" font-family="monospace" font-size="8" fill="#00ccff" fill-opacity="0.2">ASSOCIATION</text>
+  <text x="450" y="90" font-family="monospace" font-size="8" fill="#00ff88" fill-opacity="0.2">MOTOR</text>
+
+  <!-- Right panel -->
+  <rect x="581" y="63" width="319" height="436" fill="#0a0a0a"/>
+  <line x1="581" y1="63" x2="581" y2="499" stroke="#00ff8844"/>
+
+  <!-- Output area -->
+  <rect x="591" y="73" width="299" height="320" rx="4" fill="#0f0f0f" stroke="#00ff8822"/>
+
+  <!-- Output text -->
+  <text x="601" y="93" font-family="monospace" font-size="10" fill="#00ff88" fill-opacity="0.5">Bionetic Brain initialized.</text>
+  <text x="601" y="108" font-family="monospace" font-size="10" fill="#00ff88" fill-opacity="0.5">847 dots across 8 corpora.</text>
+  <text x="601" y="123" font-family="monospace" font-size="10" fill="#00ff88" fill-opacity="0.5">Trans-binary channels active.</text>
+  <text x="601" y="143" font-family="monospace" font-size="10" fill="#888">&gt; hello</text>
+  <text x="601" y="158" font-family="monospace" font-size="10" fill="#00ff88">◉ Processing... 847 dots active</text>
+  <text x="601" y="173" font-family="monospace" font-size="10" fill="#00ff88">  Clump #7 formed (12 dots)</text>
+  <text x="601" y="188" font-family="monospace" font-size="10" fill="#00ff88">  Clump #7 resolving...</text>
+  <text x="601" y="203" font-family="monospace" font-size="10" fill="#00ffff">  Output: greeting pattern</text>
+  <text x="601" y="223" font-family="monospace" font-size="10" fill="#888">&gt; what is 2+2</text>
+  <text x="601" y="238" font-family="monospace" font-size="10" fill="#00ff88">◉ Clump #8 formed (18 dots)</text>
+  <text x="601" y="253" font-family="monospace" font-size="10" fill="#00ff88">  Math pathway activated</text>
+  <text x="601" y="268" font-family="monospace" font-size="10" fill="#00ff88">  Reward pathway engaged</text>
+  <text x="601" y="283" font-family="monospace" font-size="10" fill="#00ffff">  Output: 4</text>
+  <text x="601" y="303" font-family="monospace" font-size="10" fill="#27c93f">⊕ Reward signal (1.0) applied</text>
+  <text x="601" y="318" font-family="monospace" font-size="10" fill="#00ff88">  Dopamine cascade: 12 branches</text>
+  <text x="601" y="338" font-family="monospace" font-size="10" fill="#aa66ff">◑ Entering dream state...</text>
+  <text x="601" y="353" font-family="monospace" font-size="10" fill="#aa66ff" fill-opacity="0.6">  Phase: Replay (3/5 paths)</text>
+  <text x="601" y="368" font-family="monospace" font-size="10" fill="#aa66ff" fill-opacity="0.6">  Consolidating 4 memories</text>
+  <text x="601" y="383" font-family="monospace" font-size="10" fill="#aa66ff" fill-opacity="0.6">  Pruned 23 weak connections</text>
+
+  <!-- Input area -->
+  <rect x="591" y="403" width="240" height="30" rx="4" fill="#0f0f0f" stroke="#00ff8844"/>
+  <text x="601" y="423" font-family="monospace" font-size="11" fill="#00ff8844">Send signal...</text>
+  <rect x="836" y="403" width="54" height="30" rx="4" fill="#00ff8822" stroke="#00ff88"/>
+  <text x="863" y="423" text-anchor="middle" font-family="monospace" font-size="10" fill="#00ff88">PULSE</text>
+
+  <!-- Control buttons -->
+  <rect x="591" y="443" width="70" height="26" rx="4" fill="#00ff8822" stroke="#00ff88" stroke-opacity="0.5"/>
+  <text x="626" y="460" text-anchor="middle" font-family="monospace" font-size="9" fill="#00ff88">⊕ REWARD</text>
+
+  <rect x="667" y="443" width="82" height="26" rx="4" fill="#ff448822" stroke="#ff4488" stroke-opacity="0.5"/>
+  <text x="708" y="460" text-anchor="middle" font-family="monospace" font-size="9" fill="#ff4488">⊖ DISCIPLINE</text>
+
+  <rect x="755" y="443" width="58" height="26" rx="4" fill="#aa66ff22" stroke="#aa66ff" stroke-opacity="0.5"/>
+  <text x="784" y="460" text-anchor="middle" font-family="monospace" font-size="9" fill="#aa66ff">◑ SLEEP</text>
+
+  <rect x="819" y="443" width="58" height="26" rx="4" fill="#00ff8822" stroke="#00ff88" stroke-opacity="0.5"/>
+  <text x="848" y="460" text-anchor="middle" font-family="monospace" font-size="9" fill="#00ff88">◉ WAKE</text>
+
+  <!-- Screenshot label -->
+  <rect x="300" y="478" width="300" height="18" rx="4" fill="#0d0d0d"/>
+  <text x="450" y="491" text-anchor="middle" font-family="monospace" font-size="9" fill="#555">Web Interface — Real-time Brain Monitoring</text>
+</svg>

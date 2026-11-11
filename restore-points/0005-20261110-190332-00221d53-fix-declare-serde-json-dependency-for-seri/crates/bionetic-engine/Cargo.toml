@@ -1,0 +1,10 @@
+[package]
+name = "bionetic-engine"
+version.workspace = true
+edition.workspace = true
+description = "Processing engine for the Bionetic brain"
+
+[dependencies]
+bionetic-core = { path = "../bionetic-core" }
+serde = { workspace = true }
+serde_json = { workspace = true }

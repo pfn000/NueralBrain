@@ -1,0 +1,42 @@
+[package]
+name = "bionetic-wasm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "WebAssembly bindings for NeuralBrain — browser & HuggingFace deployment."
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+bionetic-core = { path = "../bionetic-core" }
+bionetic-engine = { path = "../bionetic-engine" }
+bionetic-io = { path = "../bionetic-io" }
+bionetic-sdk = { path = "../bionetic-sdk", default-features = false, features = ["wasm"] }
+bionetic-vision = { path = "../bionetic-vision", default-features = false }
+bionetic-search = { path = "../bionetic-search" }
+bionetic-swarm = { path = "../bionetic-swarm" }
+
+wasm-bindgen = { workspace = true }
+js-sys = { workspace = true }
+web-sys = { workspace = true, features = [
+    "console",
+    "Window",
+    "Worker",
+    "MessageEvent",
+    "ImageData",
+    "HtmlCanvasElement",
+    "CanvasRenderingContext2d",
+    "Storage",
+] }
+serde = { workspace = true }
+serde_json = { workspace = true }
+serde-wasm-bindgen = "0.6"
+
+# The workspace release-wasm profile already performs size optimization.
+# Disable Binaryen's wasm-opt pass because its bundled validator rejects the
+# bulk-memory instructions emitted by the current Rust/WebAssembly toolchain.
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false

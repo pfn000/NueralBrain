@@ -1,0 +1,8 @@
+[package]
+name = "bionetic-core"
+version.workspace = true
+edition.workspace = true
+description = "Core primitives for the Bionetic Processing Architecture"
+
+[dependencies]
+serde = { workspace = true }

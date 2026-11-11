@@ -1,0 +1,92 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #0a0a0a; 
+            color: #00ff88; 
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        #header {
+            padding: 10px 20px;
+            border-bottom: 1px solid #00ff8844;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #header h1 { font-size: 14px; letter-spacing: 3px; }
+        #status { font-size: 11px; color: #00ff8888; }
+        #main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        #viz {
+            flex: 1;
+            position: relative;
+        }
+        #viz canvas {
+            width: 100%;
+            height: 100%;
+        }
+        #panel {
+            width: 350px;
+            border-left: 1px solid #00ff8844;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+        #output {
+            flex: 1;
+            overflow-y: auto;
+            font-size: 12px;
+            padding: 10px;
+            background: #0f0f0f;
+            border: 1px solid #00ff8822;
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+        }
+        #input-area {
+            display: flex;
+            gap: 5px;
+        }
+        #input {
+            flex: 1;
+            background: #0f0f0f;
+            border: 1px solid #00ff8844;
+            color: #00ff88;
+            padding: 8px;
+            font-family: inherit;
+            font-size: 12px;
+        }
+        button {
+            background: #00ff8822;
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 11px;
+        }
+        button:hover { background: #00ff8844; }
+        #controls {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .stat {
+            display: inline-block;
+            margin-right: 15px;
+            font-size: 10px;
+        }
+        .stat-value { color: #00ffff; }
+        .dot { 
+            position: absolute; 
+            border-radius: 50%; 
+            background: #00ff88;
+            transition: all 0.1s;
+        }
+        .dot.firing { 
+            background: #ffffff; 
+            box-shadow: 0 0 10px #00ff88;
+        }

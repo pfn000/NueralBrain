@@ -1,0 +1,20 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/bionetic-core",
+    "crates/bionetic-engine",
+    "crates/bionetic-io",
+    "crates/bionetic-wasm",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["NeuralBrain Contributors"]
+license = "MIT"
+repository = "https://github.com/pfn000/NueralBrain"
+description = "Bionetic Processing Architecture — Intelligence from neural communication, not tokens."
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

@@ -1,0 +1,19 @@
+[package]
+name = "bionetic-engine"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Runtime engine for NeuralBrain — processor, plasticity, memory, dream states."
+
+[dependencies]
+bionetic-core = { path = "../bionetic-core" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+thiserror = { workspace = true }
+
+[features]
+default = []
+brain-protocol = []

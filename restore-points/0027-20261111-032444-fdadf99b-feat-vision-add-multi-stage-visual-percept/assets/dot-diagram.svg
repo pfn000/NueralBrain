@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 350" width="700" height="350">
+  <defs>
+    <radialGradient id="dbg" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#111820"/>
+      <stop offset="100%" stop-color="#0a0e14"/>
+    </radialGradient>
+    <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00ff88" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#00ff88" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="700" height="350" fill="url(#dbg)"/>
+
+  <text x="350" y="25" text-anchor="middle" font-family="monospace" font-size="14" fill="#e6e6e6" letter-spacing="3">DOT ANATOMY</text>
+
+  <!-- Endings (inputs) on the left -->
+  <text x="60" y="80" font-family="monospace" font-size="10" fill="#00ccff" fill-opacity="0.7">ENDINGS (inputs)</text>
+
+  <!-- Ending 1 -->
+  <rect x="40" y="100" width="80" height="24" rx="4" fill="#0d1117" stroke="#00ccff" stroke-opacity="0.4"/>
+  <text x="80" y="116" text-anchor="middle" font-family="monospace" font-size="9" fill="#00ccff">Ending.1</text>
+  <line x1="120" y1="112" x2="230" y2="155" stroke="#00ccff" stroke-opacity="0.3"/>
+  <!-- Gate on ending 1 -->
+  <rect x="160" y="125" width="30" height="16" rx="3" fill="#1a1a2e" stroke="#ffaa00" stroke-opacity="0.5"/>
+  <text x="175" y="137" text-anchor="middle" font-family="monospace" font-size="7" fill="#ffaa00">GATE</text>
+
+  <!-- Ending 2 -->
+  <rect x="40" y="140" width="80" height="24" rx="4" fill="#0d1117" stroke="#00ccff" stroke-opacity="0.4"/>
+  <text x="80" y="156" text-anchor="middle" font-family="monospace" font-size="9" fill="#00ccff">Ending.2</text>
+  <line x1="120" y1="152" x2="230" y2="170" stroke="#00ccff" stroke-opacity="0.3"/>
+  <rect x="160" y="153" width="30" height="16" rx="3" fill="#1a1a2e" stroke="#ffaa00" stroke-opacity="0.5"/>
+  <text x="175" y="165" text-anchor="middle" font-family="monospace" font-size="7" fill="#ffaa00">GATE</text>
+
+  <!-- Ending 3 -->
+  <rect x="40" y="180" width="80" height="24" rx="4" fill="#0d1117" stroke="#00ccff" stroke-opacity="0.4"/>
+  <text x="80" y="196" text-anchor="middle" font-family="monospace" font-size="9" fill="#00ccff">Ending.3</text>
+  <line x1="120" y1="192" x2="230" y2="185" stroke="#00ccff" stroke-opacity="0.3"/>
+  <rect x="160" y="180" width="30" height="16" rx="3" fill="#1a1a2e" stroke="#ffaa00" stroke-opacity="0.5"/>
+  <text x="175" y="192" text-anchor="middle" font-family="monospace" font-size="7" fill="#ffaa00">GATE</text>
+
+  <!-- Central DOT -->
+  <circle cx="280" cy="170" r="45" fill="url(#coreGlow)"/>
+  <circle cx="280" cy="170" r="30" fill="#0d1117" stroke="#00ff88" stroke-opacity="0.6" stroke-width="2"/>
+  <circle cx="280" cy="170" r="10" fill="#00ff88" fill-opacity="0.6">
+    <animate attributeName="fill-opacity" values="0.6;1;0.6" dur="1.5s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="10;13;10" dur="1.5s" repeatCount="indefinite"/>
+  </circle>
+  <text x="280" y="174" text-anchor="middle" font-family="monospace" font-size="10" fill="#0a0e14" font-weight="bold">DOT</text>
+
+  <!-- Dot internal state labels -->
+  <text x="280" y="225" text-anchor="middle" font-family="monospace" font-size="8" fill="#00ff88" fill-opacity="0.5">potential | threshold</text>
+  <text x="280" y="237" text-anchor="middle" font-family="monospace" font-size="8" fill="#00ff88" fill-opacity="0.5">chemicals | fatigue</text>
+  <text x="280" y="249" text-anchor="middle" font-family="monospace" font-size="8" fill="#00ff88" fill-opacity="0.5">fire_count | value</text>
+
+  <!-- Branches (outputs) on the right -->
+  <text x="480" y="80" font-family="monospace" font-size="10" fill="#00ff88" fill-opacity="0.7">BRANCHES (outputs)</text>
+
+  <!-- Branch 1 -->
+  <line x1="310" y1="155" x2="420" y2="112" stroke="#00ff88" stroke-opacity="0.4"/>
+  <rect x="380" y="118" width="30" height="16" rx="3" fill="#1a1a2e" stroke="#ffaa00" stroke-opacity="0.5"/>
+  <text x="395" y="130" text-anchor="middle" font-family="monospace" font-size="7" fill="#ffaa00">GATE</text>
+  <rect x="440" y="100" width="100" height="24" rx="4" fill="#0d1117" stroke="#00ff88" stroke-opacity="0.4"/>
+  <text x="490" y="116" text-anchor="middle" font-family="monospace" font-size="9" fill="#00ff88">Branch.1 → ●</text>
+
+  <!-- Branch 2 -->
+  <line x1="310" y1="170" x2="420" y2="152" stroke="#00ff88" stroke-opacity="0.4"/>
+  <rect x="380" y="146" width="30" height="16" rx="3" fill="#1a1a2e" stroke="#ffaa00" stroke-opacity="0.5"/>
+  <text x="395" y="158" text-anchor="middle" font-family="monospace" font-size="7" fill="#ffaa00">GATE</text>
+  <rect x="440" y="140" width="100" height="24" rx="4" fill="#0d1117" stroke="#00ff88" stroke-opacity="0.4"/>
+  <text x="490" y="156" text-anchor="middle" font-family="monospace" font-size="9" fill="#00ff88">Branch.2 → ●</text>
+
+  <!-- Branch 3 -->
+  <line x1="310" y1="185" x2="420" y2="192" stroke="#00ff88" stroke-opacity="0.4"/>
+  <rect x="380" y="178" width="30" height="16" rx="3" fill="#1a1a2e" stroke="#ffaa00" stroke-opacity="0.5"/>
+  <text x="395" y="190" text-anchor="middle" font-family="monospace" font-size="7" fill="#ffaa00">GATE</text>
+  <rect x="440" y="180" width="100" height="24" rx="4" fill="#0d1117" stroke="#00ff88" stroke-opacity="0.4"/>
+  <text x="490" y="196" text-anchor="middle" font-family="monospace" font-size="9" fill="#00ff88">Branch.3 → ●</text>
+
+  <!-- Chemical state box -->
+  <rect x="530" y="240" width="150" height="95" rx="6" fill="#0d1117" stroke="#ff4488" stroke-opacity="0.3"/>
+  <text x="605" y="258" text-anchor="middle" font-family="monospace" font-size="9" fill="#ff4488">CHEMICAL STATE</text>
+  <text x="555" y="275" font-family="monospace" font-size="8" fill="#ff6688" fill-opacity="0.6">dopamine   ████░░ </text>
+  <text x="555" y="288" font-family="monospace" font-size="8" fill="#4488ff" fill-opacity="0.6">serotonin  ███░░░ </text>
+  <text x="555" y="301" font-family="monospace" font-size="8" fill="#ff4444" fill-opacity="0.6">cortisol   █░░░░░ </text>
+  <text x="555" y="314" font-family="monospace" font-size="8" fill="#44ff88" fill-opacity="0.6">acetylchol ████░░ </text>
+  <text x="555" y="327" font-family="monospace" font-size="8" fill="#8844ff" fill-opacity="0.6">gaba       ██░░░░ </text>
+
+  <!-- Rate box -->
+  <rect x="30" y="240" width="150" height="80" rx="6" fill="#0d1117" stroke="#00ccff" stroke-opacity="0.3"/>
+  <text x="105" y="258" text-anchor="middle" font-family="monospace" font-size="9" fill="#00ccff">RATE</text>
+  <text x="45" y="275" font-family="monospace" font-size="8" fill="#00ccff" fill-opacity="0.6">speed:     1.0x</text>
+  <text x="45" y="288" font-family="monospace" font-size="8" fill="#00ccff" fill-opacity="0.6">seed:      0x4A2F</text>
+  <text x="45" y="301" font-family="monospace" font-size="8" fill="#00ccff" fill-opacity="0.6">value:     0.73</text>
+  <text x="45" y="314" font-family="monospace" font-size="8" fill="#00ccff" fill-opacity="0.6">intensity: 0.85</text>
+</svg>
