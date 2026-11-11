@@ -6,7 +6,7 @@ use bionetic_search::{
     query::QueryBuilder,
 };
 use bionetic_sdk::BrainBuilder;
-use bionetic_core::ids::CorpusId;
+use bionetic_core::{SENSORY_IN, MOTOR};
 
 #[test]
 fn concept_query_returns_tagged_documents() {
@@ -65,11 +65,11 @@ fn encoder_queues_pulses_using_real_engine_dot_ids() {
     let engine = SearchEngine::new(seed_corpus(), SearchEngineConfig::default());
     let result = engine.search(&QueryBuilder::new().concept(ConceptId(0)).build()).unwrap();
     let encoder = SearchEncoder::new(SearchEncoderConfig::default());
-    let mut brain = BrainBuilder::new().with_corpora(8).with_dots_per_corpus(64).build();
+    let mut brain = BrainBuilder::new().with_corpora(bionetic_core::CORPUS_COUNT_TOTAL).with_dots_per_corpus(64).build();
     let queued = encoder.encode(&result, &corpus, brain.engine_mut());
     assert!(queued > 0);
     assert!(brain.engine().pending_pulses() >= queued);
-    assert!(brain.engine().has_corpus(CorpusId(0)));
+    assert!(brain.engine().has_corpus(SENSORY_IN));
 }
 
 #[cfg(feature = "agent")]
@@ -82,7 +82,7 @@ fn local_search_effector_runs_without_network_capability() {
 
     let search = Arc::new(Mutex::new(SearchEngine::new(seed_corpus(), SearchEngineConfig::default())));
     let effector = SearchEffector::new(search, vec![ConceptId(0), ConceptId(1), ConceptId(2)]);
-    let mut brain = BrainBuilder::new().with_corpora(8).with_dots_per_corpus(128).build();
+    let mut brain = BrainBuilder::new().with_corpora(bionetic_core::CORPUS_COUNT_TOTAL).with_dots_per_corpus(128).build();
     let mut agent = AgentBuilder::new()
         .with_effector(effector)
         .policy(PermissionPolicy::deny_all())
@@ -90,7 +90,7 @@ fn local_search_effector_runs_without_network_capability() {
         .build().unwrap();
 
     let tick = brain.engine().tick;
-    if let Some(corpus) = brain.engine_mut().corpora.get_mut(&CorpusId(5)) {
+    if let Some(corpus) = brain.engine_mut().corpora.get_mut(&MOTOR) {
         let mut ids: Vec<_> = corpus.dots.keys().copied().collect();
         ids.sort_unstable();
         for id in ids.into_iter().take(16) {

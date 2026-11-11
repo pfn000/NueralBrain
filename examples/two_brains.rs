@@ -4,6 +4,7 @@
 
 use bionetic_core::ids::DotId;
 use bionetic_core::ids::CorpusId;
+use bionetic_core::{SENSORY_IN, SENSORY_OUT, VISION, PREFRONTAL};
 use bionetic_core::pulse::Pulse;
 use bionetic_engine::brain_protocol::{BrainNetwork, PROTOCOL_VERSION};
 
@@ -12,8 +13,8 @@ fn main() {
     println!("Protocol version: {PROTOCOL_VERSION}\n");
 
     // Create two brain networks
-    let mut brain_a = BrainNetwork::new(vec![CorpusId(0), CorpusId(1)], 100);
-    let mut brain_b = BrainNetwork::new(vec![CorpusId(2), CorpusId(3)], 100);
+    let mut brain_a = BrainNetwork::new(vec![SENSORY_IN, SENSORY_OUT], 100);
+    let mut brain_b = BrainNetwork::new(vec![VISION, PREFRONTAL], 100);
 
     brain_a.advertise_feature("vision");
     brain_b.advertise_feature("reasoning");
@@ -47,8 +48,8 @@ fn main() {
             ))
             .collect();
 
-        println!("[tick {tick}] A → B: {} pulses to CorpusId(2)", pulses.len());
-        brain_a.send_pulses(b_id, CorpusId(2), pulses);
+        println!("[tick {tick}] A → B: {} pulses to VISION", pulses.len());
+        brain_a.send_pulses(b_id, VISION, pulses);
         relay(&mut brain_a, &mut brain_b);
 
         let delivered = brain_b.drain_inbox_pulses();

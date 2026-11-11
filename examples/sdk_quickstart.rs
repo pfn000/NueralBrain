@@ -1,10 +1,10 @@
 //! The simplest possible NeuralBrain app — 20 lines total.
 
-use bionetic_sdk::{BrainBuilder, InputBatch, CorpusId};
+use bionetic_sdk::{BrainBuilder, InputBatch};
 
 fn main() {
     let mut brain = BrainBuilder::new()
-        .with_corpora(8)
+        .with_corpora(bionetic_core::CORPUS_COUNT_TOTAL)
         .with_dots_per_corpus(128)
         .with_dreaming(true)
         .build();

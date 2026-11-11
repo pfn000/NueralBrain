@@ -4,6 +4,7 @@
 #[cfg(feature = "camera")]
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     use bionetic_sdk::BrainBuilder;
+    use bionetic_core::VISION;
     use bionetic_vision::pipeline::{VisionPipeline, VisionPipelineConfig};
     use bionetic_vision::source::VisualSource;
     use bionetic_vision::sources::CameraSource;
@@ -17,7 +18,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut pipeline = VisionPipeline::new(VisionPipelineConfig::default());
     let mut brain = BrainBuilder::new()
-        .with_corpora(8)
+        .with_corpora(bionetic_core::CORPUS_COUNT_TOTAL)
         .with_dots_per_corpus(256)
         .with_max_input_pulses(16_384)
         .build();
@@ -25,15 +26,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for tick in 1..=20 {
         let frame = camera.capture_frame()?;
         let pulses = pipeline.process_frame(&frame, tick);
-        let output = brain.inject_multimodal_pulses(pulses)?;
+        let mut queued = 0usize;
+        for pulse in pulses {
+            if brain.engine_mut().inject_pulse_object(VISION, pulse).is_some() {
+                queued += 1;
+            }
+        }
+        brain.idle(1);
+        let motor_outputs = brain.engine().read_motor_output().len();
+        let active_dots = brain.engine().active_dot_count();
         println!(
-            "tick {tick}: captured {}x{}, motor outputs {}, active dots {}",
+            "tick {tick}: captured {}x{}, queued vision pulses {}, motor outputs {}, active dots {}",
             frame.width,
             frame.height,
-            output.motor.len(),
-            output.active_dots
+            queued,
+            motor_outputs,
+            active_dots
         );
-        brain.idle(1);
     }
     camera.close()?;
     Ok(())
