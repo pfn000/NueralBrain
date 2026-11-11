@@ -88,7 +88,7 @@ impl Effector for CdpBrowserEffector {
         let bytes = self.runtime.block_on(async move {
             let config = CdpConfig::builder().build()
                 .map_err(|error| AgentError::Config(format!("CDP config: {error}")))?;
-            let (browser, mut handler) = tokio::time::timeout(timeout, Browser::launch(config)).await
+            let (mut browser, mut handler) = tokio::time::timeout(timeout, Browser::launch(config)).await
                 .map_err(|_| AgentError::Timeout("browser-cdp".into(), timeout.as_millis() as u64))?
                 .map_err(|error| AgentError::EffectorFailed("browser-cdp".into(), error.to_string()))?;
             let handler_task = tokio::spawn(async move {
