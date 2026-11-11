@@ -29,7 +29,7 @@ full = ["corpus-json", "web", "agent"]
 
 [dev-dependencies]
 bionetic-sdk = { path = "../bionetic-sdk" }
-tempfile = "3.10"
+tempfile = "=3.10.1"
 
 [[example]]
 name = "search_agent"
