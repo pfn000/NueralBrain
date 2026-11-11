@@ -4,9 +4,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     use bionetic_agent::{AgentBuilder, Capability, PermissionPolicy};
     use bionetic_agent::effectors::{ShellEffector, shell::{ShellCommand, ShellConfig}};
     use bionetic_sdk::BrainBuilder;
-    use bionetic_core::ids::CorpusId;
+    use bionetic_core::MOTOR;
 
-    let mut brain = BrainBuilder::new().with_corpora(8).with_dots_per_corpus(128).build();
+    let mut brain = BrainBuilder::new().with_corpora(bionetic_core::CORPUS_COUNT_TOTAL).with_dots_per_corpus(128).build();
     let effector = ShellEffector::new(ShellConfig {
         command_slots: vec![ShellCommand {
             program: "echo".into(),
@@ -23,7 +23,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .build()?;
 
     let tick = brain.engine().tick;
-    if let Some(corpus) = brain.engine_mut().corpora.get_mut(&CorpusId(5)) {
+    if let Some(corpus) = brain.engine_mut().corpora.get_mut(&MOTOR) {
         let mut ids: Vec<_> = corpus.dots.keys().copied().collect();
         ids.sort_unstable();
         for id in ids.into_iter().skip(16).take(16) {

@@ -3,7 +3,7 @@ use bionetic_agent::{
     PermissionPolicy,
 };
 use bionetic_agent::error::{AgentError, AgentResult};
-use bionetic_core::ids::CorpusId;
+use bionetic_core::MOTOR;
 use bionetic_sdk::BrainBuilder;
 
 struct NeedsNetwork;
@@ -20,7 +20,7 @@ impl Effector for NeedsNetwork {
 
 fn stimulate(engine: &mut bionetic_engine::engine::BioneticEngine, offset: usize, size: usize) {
     let tick = engine.tick;
-    if let Some(corpus) = engine.corpora.get_mut(&CorpusId(5)) {
+    if let Some(corpus) = engine.corpora.get_mut(&MOTOR) {
         let mut ids: Vec<_> = corpus.dots.keys().copied().collect();
         ids.sort_unstable();
         for id in ids.into_iter().skip(offset).take(size) {
@@ -31,7 +31,7 @@ fn stimulate(engine: &mut bionetic_engine::engine::BioneticEngine, offset: usize
 
 #[test]
 fn deny_all_blocks_effector_that_needs_network() {
-    let mut brain = BrainBuilder::new().with_corpora(8).with_dots_per_corpus(128).build();
+    let mut brain = BrainBuilder::new().with_corpora(bionetic_core::CORPUS_COUNT_TOTAL).with_dots_per_corpus(128).build();
     let mut agent = AgentBuilder::new()
         .with_effector(NeedsNetwork)
         .policy(PermissionPolicy::deny_all())
@@ -45,7 +45,7 @@ fn deny_all_blocks_effector_that_needs_network() {
 
 #[test]
 fn granting_network_capability_allows_execution() {
-    let mut brain = BrainBuilder::new().with_corpora(8).with_dots_per_corpus(128).build();
+    let mut brain = BrainBuilder::new().with_corpora(bionetic_core::CORPUS_COUNT_TOTAL).with_dots_per_corpus(128).build();
     let mut agent = AgentBuilder::new()
         .with_effector(NeedsNetwork)
         .policy(PermissionPolicy::deny_all().grant(Capability::NetworkHttp))
@@ -60,7 +60,7 @@ fn granting_network_capability_allows_execution() {
 
 #[test]
 fn act_is_denied_in_read_only_mode() {
-    let mut brain = BrainBuilder::new().with_corpora(8).with_dots_per_corpus(128).build();
+    let mut brain = BrainBuilder::new().with_corpora(bionetic_core::CORPUS_COUNT_TOTAL).with_dots_per_corpus(128).build();
     let mut agent = AgentBuilder::new()
         .with_effector(NeedsNetwork)
         .policy(PermissionPolicy::allow_all().read_only(true))
@@ -73,7 +73,7 @@ fn act_is_denied_in_read_only_mode() {
 
 #[test]
 fn unknown_intent_has_no_effector() {
-    let mut brain = BrainBuilder::new().with_corpora(8).with_dots_per_corpus(128).build();
+    let mut brain = BrainBuilder::new().with_corpora(bionetic_core::CORPUS_COUNT_TOTAL).with_dots_per_corpus(128).build();
     let mut agent = AgentBuilder::new()
         .with_effector(NeedsNetwork)
         .policy(PermissionPolicy::allow_all())
@@ -91,7 +91,7 @@ fn builder_rejects_empty_registry() {
 
 #[test]
 fn audit_records_blocked_attempts() {
-    let mut brain = BrainBuilder::new().with_corpora(8).with_dots_per_corpus(128).build();
+    let mut brain = BrainBuilder::new().with_corpora(bionetic_core::CORPUS_COUNT_TOTAL).with_dots_per_corpus(128).build();
     let mut agent = AgentBuilder::new()
         .with_effector(NeedsNetwork)
         .policy(PermissionPolicy::deny_all())

@@ -1,10 +1,10 @@
 use bionetic_agent::{AgentBuilder, Capability, PermissionPolicy};
-use bionetic_core::ids::CorpusId;
+use bionetic_core::MOTOR;
 use bionetic_sdk::BrainBuilder;
 
 fn stimulate(engine: &mut bionetic_engine::engine::BioneticEngine, offset: usize, size: usize) {
     let tick = engine.tick;
-    if let Some(corpus) = engine.corpora.get_mut(&CorpusId(5)) {
+    if let Some(corpus) = engine.corpora.get_mut(&MOTOR) {
         let mut ids: Vec<_> = corpus.dots.keys().copied().collect();
         ids.sort_unstable();
         for id in ids.into_iter().skip(offset).take(size) {
@@ -18,7 +18,7 @@ fn stimulate(engine: &mut bionetic_engine::engine::BioneticEngine, offset: usize
 fn shell_echo_runs_only_when_granted() {
     use std::time::Duration;
     use bionetic_agent::effectors::{ShellEffector, shell::{ShellCommand, ShellConfig}};
-    let mut brain = BrainBuilder::new().with_corpora(8).with_dots_per_corpus(128).build();
+    let mut brain = BrainBuilder::new().with_corpora(bionetic_core::CORPUS_COUNT_TOTAL).with_dots_per_corpus(128).build();
     let config = ShellConfig { command_slots: vec![ShellCommand {
         program: "echo".into(), args: vec!["ok".into()], accept_payload_arg: false,
         timeout: Duration::from_secs(2), max_output_bytes: 64,
@@ -38,7 +38,7 @@ fn shell_echo_runs_only_when_granted() {
 fn shell_is_blocked_without_capability() {
     use std::time::Duration;
     use bionetic_agent::effectors::{ShellEffector, shell::{ShellCommand, ShellConfig}};
-    let mut brain = BrainBuilder::new().with_corpora(8).with_dots_per_corpus(128).build();
+    let mut brain = BrainBuilder::new().with_corpora(bionetic_core::CORPUS_COUNT_TOTAL).with_dots_per_corpus(128).build();
     let config = ShellConfig { command_slots: vec![ShellCommand {
         program: "echo".into(), args: vec!["must-not-run".into()], accept_payload_arg: false,
         timeout: Duration::from_secs(2), max_output_bytes: 64,
@@ -65,7 +65,7 @@ fn filesystem_reads_only_inside_jail() {
         allow_write: false,
         max_bytes: 1024,
     };
-    let mut brain = BrainBuilder::new().with_corpora(8).with_dots_per_corpus(128).build();
+    let mut brain = BrainBuilder::new().with_corpora(bionetic_core::CORPUS_COUNT_TOTAL).with_dots_per_corpus(128).build();
     let mut agent = AgentBuilder::new()
         .with_effector(FsEffector::new(config))
         .policy(PermissionPolicy::deny_all()
@@ -87,7 +87,7 @@ fn filesystem_rejects_parent_traversal() {
         allow_write: false,
         max_bytes: 1024,
     };
-    let mut brain = BrainBuilder::new().with_corpora(8).with_dots_per_corpus(128).build();
+    let mut brain = BrainBuilder::new().with_corpora(bionetic_core::CORPUS_COUNT_TOTAL).with_dots_per_corpus(128).build();
     let mut agent = AgentBuilder::new()
         .with_effector(FsEffector::new(config))
         .policy(PermissionPolicy::deny_all()
@@ -112,7 +112,7 @@ fn code_emit_writes_selected_template() {
         name_slots: vec!["hello".into()],
         max_param_bytes: 64,
     };
-    let mut brain = BrainBuilder::new().with_corpora(8).with_dots_per_corpus(128).build();
+    let mut brain = BrainBuilder::new().with_corpora(bionetic_core::CORPUS_COUNT_TOTAL).with_dots_per_corpus(128).build();
     let mut agent = AgentBuilder::new()
         .with_effector(CodeEffector::new(config))
         .policy(PermissionPolicy::deny_all()
