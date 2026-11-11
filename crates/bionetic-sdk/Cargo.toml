@@ -1,0 +1,31 @@
+[package]
+name = "bionetic-sdk"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Embeddable SDK for NeuralBrain — drop a bionetic brain into any Rust application."
+
+[features]
+default = ["native"]
+native = []
+wasm = ["dep:wasm-bindgen", "dep:js-sys"]
+multimodal = ["bionetic-core/multimodal"]
+brain-network = ["bionetic-engine/brain-protocol"]
+full = ["multimodal", "brain-network"]
+
+[dependencies]
+bionetic-core   = { path = "../bionetic-core" }
+bionetic-engine = { path = "../bionetic-engine" }
+bionetic-io     = { path = "../bionetic-io" }
+
+serde      = { workspace = true }
+serde_json = { workspace = true }
+thiserror  = { workspace = true }
+
+wasm-bindgen = { workspace = true, optional = true }
+js-sys       = { workspace = true, optional = true }
+
+[dev-dependencies]
+serde_json = { workspace = true }
