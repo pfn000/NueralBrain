@@ -14,3 +14,4 @@ pub mod dream;
 pub mod sleep;
 
 pub use engine::BioneticEngine;
+pub mod brain_protocol;

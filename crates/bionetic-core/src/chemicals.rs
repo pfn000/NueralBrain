@@ -106,3 +106,36 @@ impl ChemicalDelta {
         }
     }
 }
+
+/// A read-only snapshot of chemical levels for serialization / sync.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct ChemicalSnapshot {
+    pub dopamine: f32,
+    pub serotonin: f32,
+    pub cortisol: f32,
+    pub acetylcholine: f32,
+    pub gaba: f32,
+    pub glutamate: f32,
+}
+
+impl ChemicalSnapshot {
+    /// Build a snapshot from the live chemical state.
+    /// (Call this method on your existing `Chemicals` or equivalent struct.)
+    pub fn from_values(
+        dopamine: f32,
+        serotonin: f32,
+        cortisol: f32,
+        acetylcholine: f32,
+        gaba: f32,
+        glutamate: f32,
+    ) -> Self {
+        Self {
+            dopamine,
+            serotonin,
+            cortisol,
+            acetylcholine,
+            gaba,
+            glutamate,
+        }
+    }
+}
