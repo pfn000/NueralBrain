@@ -68,7 +68,13 @@ impl BrainId {
 
     /// Hex string representation for logging.
     pub fn to_hex(&self) -> String {
-        self.0.iter().map(|b| format!("{:02x}", b)).collect()
+        use std::fmt::Write as _;
+        let mut output = String::with_capacity(32);
+        for byte in &self.0 {
+            write!(&mut output, "{:02x}", byte)
+                .expect("writing hexadecimal bytes to a String cannot fail");
+        }
+        output
     }
 
     /// Short 8-char hex prefix for human display.

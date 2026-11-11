@@ -19,7 +19,12 @@ pub enum VisionError {
     CaptureFailed(String),
     /// A frame declared zero or invalid dimensions.
     #[error("invalid frame dimensions: {w}x{h}")]
-    InvalidDimensions { w: u32, h: u32 },
+    InvalidDimensions {
+        /// Declared frame width.
+        w: u32,
+        /// Declared frame height.
+        h: u32,
+    },
     /// A source returned a pixel format that its adapter cannot decode.
     #[error("unsupported pixel format: {0}")]
     UnsupportedFormat(String),
